@@ -1,0 +1,158 @@
+{
+	"name": "sort-json",
+	"displayName": "Sort JSON",
+	"description": "Simple JSON Object and Array sort",
+	"version": "1.0.0",
+	"publisher": "Thinker",
+	"license": "MIT",
+	"icon": "images/sort-json-logo.png",
+	"author": {
+		"name": "Sivaraman",
+		"email": "sendmsg2siva@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/R35007/sort-json-vscode-extension"
+	},
+	"keywords": [
+		"JSON",
+		"Sort JSON",
+		"sort",
+		"order json",
+		"json sort",
+		"object sort",
+		"sorting",
+		"array sort",
+		"sort array",
+		"array",
+		"object",
+		"order"
+	],
+	"engines": {
+		"vscode": "^1.60.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:sort-json.sortJSON",
+		"onCommand:sort-json.sortJSONDeep",
+		"onCommand:sort-json.sortJSONReverse",
+		"onCommand:sort-json.sortJSONDeepReverse"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "sort-json.sortJSON",
+				"title": "Sort JSON"
+			},
+			{
+				"command": "sort-json.sortJSONDeep",
+				"title": "Sort JSON Deep"
+			},
+			{
+				"command": "sort-json.sortJSONReverse",
+				"title": "Sort JSON Reverse"
+			},
+			{
+				"command": "sort-json.sortJSONDeepReverse",
+				"title": "Sort JSON Deep Reverse"
+			}
+		],
+		"configuration": {
+			"title": "Sort JSON",
+			"properties": {
+				"sort-json.settings.contextMenu": {
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"sortJSON": {
+							"type": "boolean"
+						},
+						"sortJSONDeep": {
+							"type": "boolean"
+						},
+						"sortJSONReverse": {
+							"type": "boolean"
+						},
+						"sortJSONDeepReverse": {
+							"type": "boolean"
+						}
+					},
+					"default": {
+						"sortJSON": true,
+						"sortJSONDeep": true,
+						"sortJSONReverse": true,
+						"sortJSONDeepReverse": true
+					},
+					"description": "Which editor context menu commands to show"
+				},
+				"sort-json.settings.orderOverride": {
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"additionalItems": true,
+					"description": "Settings to override the sort order (i.e. to be at the start of the order)"
+				}
+			}
+		},
+		"menus": {
+			"editor/context": [
+				{
+					"when": "config.sort-json.settings.contextMenu.sortJSON",
+					"command": "sort-json.sortJSON",
+					"title": "Sort JSON",
+					"group": "sort-json"
+				},
+				{
+					"when": "config.sort-json.settings.contextMenu.sortJSONDeep",
+					"command": "sort-json.sortJSONDeep",
+					"title": "Sort JSON Deep",
+					"group": "sort-json"
+				},
+				{
+					"when": "config.sort-json.settings.contextMenu.sortJSONReverse",
+					"command": "sort-json.sortJSONReverse",
+					"title": "Sort JSON Reverse",
+					"group": "sort-json"
+				},
+				{
+					"when": "config.sort-json.settings.contextMenu.sortJSONDeepReverse",
+					"command": "sort-json.sortJSONDeepReverse",
+					"title": "Sort JSON Deep Reverse",
+					"group": "sort-json"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.60.0",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.2.2",
+		"@types/node": "14.x",
+		"eslint": "^7.27.0",
+		"@typescript-eslint/eslint-plugin": "^4.26.0",
+		"@typescript-eslint/parser": "^4.26.0",
+		"glob": "^7.1.7",
+		"mocha": "^8.4.0",
+		"typescript": "^4.3.2",
+		"vscode-test": "^1.5.2"
+	},
+	"dependencies": {
+		"@types/json-parse-helpfulerror": "^1.0.1",
+		"@types/lodash": "^4.14.173",
+		"json-parse-helpfulerror": "^1.0.3",
+		"lodash": "^4.17.21"
+	}
+}
