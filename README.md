@@ -15,16 +15,16 @@ Simple JSON Object and Array sort.
 
 This extension contributes the following commands:
 
-- `sort-json.settings.contextMenu`: show/hide editor context items.
-- `sort-json.settings.orderOverride`: Override the object sort order.
+- `Sort JSON`: Sort JSON object ascending.
+- `Sort JSON Deep`: Sort all nested JSON object ascending.
+- `Sort JSON Reverse`: Sort JSON object descending.
+- `Sort JSON Deep Reverse`: Sort all nested JSON object descending.
 
 ## Extension Settings
 
 This extension contributes the following settings:
 
-- `Sort JSON`: Sort JSON object ascending.
-- `Sort JSON Deep`: Sort all nested JSON object ascending.
-- `Sort JSON Reverse`: Sort JSON object descending.
-- `Sort JSON Deep Reverse`: Sort all nested JSON object descending.
+- `sort-json.settings.contextMenu`: show/hide editor context items.
+- `sort-json.settings.orderOverride`: Override the object sort order.
 
 **Enjoy!**
