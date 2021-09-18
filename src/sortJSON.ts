@@ -1,8 +1,8 @@
-import { getEditorProps, getSortKeys, writeFile } from './utils';
-import * as vscode from 'vscode';
-import * as _ from 'lodash';
-import { Settings } from './Settings';
 import * as JPH from 'json-parse-helpfulerror';
+import * as _ from 'lodash';
+import * as vscode from 'vscode';
+import { Settings } from './Settings';
+import { getEditorProps, getSortKeys, writeFile } from './utils';
 
 export const sortJSON = async (isDeep: boolean = false, isReverse: boolean = false) => {
   try {
