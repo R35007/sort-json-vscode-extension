@@ -26,5 +26,6 @@ This extension contributes the following settings:
 
 - `sort-json.settings.contextMenu`: show/hide editor context items.
 - `sort-json.settings.orderOverride`: Override the object sort order.
+- `sort-json.settings.isCaseSensitive`: sort comparision with case sensitive.
 
 **Enjoy!**

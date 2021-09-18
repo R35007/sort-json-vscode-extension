@@ -77,4 +77,14 @@ const sortObject = async (
 };
 
 // Legacy Sort Comparision
-const compare = (x: any, y: any) => (x == y ? 0 : x > y ? 1 : -1);
+const compare = (a: any, b: any) => {
+  let x = a;
+  let y = b;
+
+  if (!Settings.isCaseSensitive) {
+    x = _.isString(a) ? a.toUpperCase() : a;
+    y = _.isString(b) ? b.toUpperCase() : b;
+  }
+
+  return x == y ? 0 : x > y ? 1 : -1;
+};

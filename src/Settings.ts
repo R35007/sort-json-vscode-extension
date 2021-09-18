@@ -16,4 +16,7 @@ export class Settings {
   static get orderOverride() {
     return (Settings.getSettings('orderOverride') as string[]) || [];
   }
+  static get isCaseSensitive() {
+    return (Settings.getSettings('isCaseSensitive') as boolean);
+  }
 }
