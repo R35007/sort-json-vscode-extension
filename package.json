@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "2.0.0",
+	"version": "3.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -101,6 +101,17 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Set to true to compare with case sensitive in sorting"
+				},
+				"sort-json.settings.sortType": {
+					"type": "string",
+					"default": "Key",
+					"enum": [
+						"Key",
+						"Key Length",
+						"Value",
+						"Value Length"
+					],
+					"description": "Set JSON Object Sorting Type"
 				}
 			}
 		},

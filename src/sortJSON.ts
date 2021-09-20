@@ -64,26 +64,57 @@ const sortObject = async (
   level: number = 0
 ): Promise<object> => {
   let result: any = {};
-  const sortOrderKeys: string[] = Settings.orderOverride || [];
 
-  const objectKeys = [...new Set([...sortOrderKeys, ...Object.keys(data).sort(compare)])];
-  const sortKeys = isReverse ? objectKeys.reverse() : objectKeys;
+  const sortKeysOrder = getSortKeysOrder(data, isReverse);
 
-  for await (let key of sortKeys) {
+  for await (let key of sortKeysOrder) {
     result[key] = isDeep ? await sort(data[key], isDeep, isReverse, level + 1) : data[key];
   }
 
   return result;
 };
 
-// Legacy Sort Comparision
+const getSortKeysOrder = (data: any, isReverse: boolean) => {
+  const orderOverrideKeys: string[] = Settings.orderOverride || [];
+
+  let sortedObjectKeys: string[] = [];
+  let objectKeys: string[] = [];
+
+  switch (Settings.sortType) {
+    case 'Value': {
+      sortedObjectKeys = Object.keys(data).sort((a, b) => compare(data[a], data[b]));
+      break;
+    }
+    case 'Value Length': {
+      sortedObjectKeys = Object.keys(data).sort((a, b) =>
+        compare(JSON.stringify(data[a]).length, JSON.stringify(data[b]).length)
+      );
+      break;
+    }
+    case 'Key Length': {
+      sortedObjectKeys = Object.keys(data).sort((a, b) => compare(('' + a).length, ('' + b).length));
+      break;
+    }
+    default: {
+      // Sort By Object Keys
+      sortedObjectKeys = Object.keys(data).sort(compare);
+      break;
+    }
+  }
+
+  objectKeys = [...new Set([...orderOverrideKeys, ...sortedObjectKeys])]; //  Get Unique Keys
+  const sortKeysOrder = isReverse ? objectKeys.reverse() : objectKeys;
+  return sortKeysOrder;
+};
+
+// Sort Comparision
 const compare = (a: any, b: any) => {
-  let x = a;
-  let y = b;
+  let x = _.isString(a) ? a : JSON.stringify(a);
+  let y = _.isString(b) ? b : JSON.stringify(b);
 
   if (!Settings.isCaseSensitive) {
-    x = _.isString(a) ? a.toUpperCase() : a;
-    y = _.isString(b) ? b.toUpperCase() : b;
+    x = _.isString(x) ? x.toUpperCase() : x;
+    y = _.isString(y) ? y.toUpperCase() : y;
   }
 
   return x == y ? 0 : x > y ? 1 : -1;

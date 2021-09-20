@@ -17,6 +17,9 @@ export class Settings {
     return (Settings.getSettings('orderOverride') as string[]) || [];
   }
   static get isCaseSensitive() {
-    return (Settings.getSettings('isCaseSensitive') as boolean);
+    return Settings.getSettings('isCaseSensitive') as boolean;
+  }
+  static get sortType() {
+    return Settings.getSettings('sortType') as 'Key' | 'Key Length' | 'Value' | 'Value Length';
   }
 }
