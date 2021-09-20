@@ -2,7 +2,7 @@
 
 Simple JSON Object and Array sort.
 
-![Sort JSON](./images/demo.gif)
+![Sort JSON](./images/preview.gif)
 
 ## Features
 
