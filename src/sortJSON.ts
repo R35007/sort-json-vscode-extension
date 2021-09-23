@@ -86,9 +86,16 @@ const getSortKeysOrder = (data: any, isReverse: boolean) => {
       break;
     }
     case 'Value Length': {
-      sortedObjectKeys = Object.keys(data).sort((a, b) =>
-        compare(JSON.stringify(data[a]).length, JSON.stringify(data[b]).length)
-      );
+      sortedObjectKeys = Object.keys(data).sort((a, b) => compareByValueLength(a, b, data));
+      break;
+    }
+    case 'Value Type': {
+      const typeReducer: any = (res: string[], type: string) => {
+        const filteredKeys = Object.keys(data).filter((key) => eval(`_.${'is' + type}`)(data[key]));
+        return res.concat(filteredKeys.sort((a, b) => compare(data[a], data[b])));
+      };
+
+      sortedObjectKeys = Settings.sortValueTypeOrder.reduce(typeReducer, []);
       break;
     }
     case 'Key Length': {
@@ -105,6 +112,16 @@ const getSortKeysOrder = (data: any, isReverse: boolean) => {
   objectKeys = [...new Set([...orderOverrideKeys, ...sortedObjectKeys])]; //  Get Unique Keys
   const sortKeysOrder = isReverse ? objectKeys.reverse() : objectKeys;
   return sortKeysOrder;
+};
+
+// Sort By Value Length Comparision
+const compareByValueLength = (a: any, b: any, data: any) => {
+  const aVal = data[a];
+  const bVal = data[b];
+  const aLength = _.isArray(aVal) ? aVal.length : _.isPlainObject(aVal) ? Object.keys(aVal).length : ('' + aVal).length;
+  const bLength = _.isArray(bVal) ? bVal.length : _.isPlainObject(bVal) ? Object.keys(bVal).length : ('' + bVal).length;
+
+  return compare(aLength, bLength);
 };
 
 // Sort Comparision

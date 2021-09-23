@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.0.0
+
+- You can now sort JSON Object by its value type.
+- added `Value Type` in `sort-json.settings.sortType`
+- added `sort-json.settings.sortValueTypeOrder`- Set your custom Value Type Sort Order
+
 ## v3.0.0
 
 - added `sort-json.settings.sortType`

@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "3.0.0",
+	"version": "4.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -109,9 +109,37 @@
 						"Key",
 						"Key Length",
 						"Value",
-						"Value Length"
+						"Value Length",
+						"Value Type"
 					],
 					"description": "Set JSON Object Sorting Type"
+				},
+				"sort-json.settings.sortValueTypeOrder": {
+					"type": "array",
+					"default": [
+						"Boolean",
+						"Null",
+						"Empty",
+						"Number",
+						"String",
+						"Array",
+						"PlainObject"
+					],
+					"enum": [
+						"Boolean",
+						"Null",
+						"Empty",
+						"Number",
+						"String",
+						"Array",
+						"PlainObject"
+					],
+					"items": {
+						"type": "string"
+					},
+					"uniqueItems": true,
+					"additionalItems": false,
+					"description": "Set Value Type Sort Order. This order works when you select sortType as 'Value type'."
 				}
 			}
 		},

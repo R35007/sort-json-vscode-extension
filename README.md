@@ -27,5 +27,7 @@ This extension contributes the following settings:
 - `sort-json.settings.contextMenu`: show/hide editor context items.
 - `sort-json.settings.orderOverride`: Override the object sort order.
 - `sort-json.settings.isCaseSensitive`: sort comparision with case sensitive.
+- `sort-json.settings.sortType`: Set JSON Object Sorting Type.
+- `sort-json.settings.sortValueTypeOrder`: Set Value Type Sort Order. This order works when you select sortType as 'Value type'.
 
 **Enjoy!**

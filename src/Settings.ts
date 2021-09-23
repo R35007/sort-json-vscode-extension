@@ -20,6 +20,18 @@ export class Settings {
     return Settings.getSettings('isCaseSensitive') as boolean;
   }
   static get sortType() {
-    return Settings.getSettings('sortType') as 'Key' | 'Key Length' | 'Value' | 'Value Length';
+    return Settings.getSettings('sortType') as 'Key' | 'Key Length' | 'Value' | 'Value Length' | 'Value Type';
+  }
+  static get sortValueTypeOrder() {
+    return (
+      (Settings.getSettings('sortValueTypeOrder') as string[]) || [
+        'boolean',
+        'null',
+        'number',
+        'string',
+        'array',
+        'object',
+      ]
+    );
   }
 }
