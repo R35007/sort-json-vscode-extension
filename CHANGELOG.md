@@ -1,5 +1,9 @@
 # Change Log
 
+## v5.0.0
+
+- added Command - `Sort JSON: Set Sort Type`: Set JSON Object Sorting Type.
+
 ## v4.0.0
 
 - You can now sort JSON Object by its value type.

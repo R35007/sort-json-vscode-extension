@@ -1,7 +1,7 @@
 import * as JPH from 'json-parse-helpfulerror';
 import * as _ from 'lodash';
 import * as vscode from 'vscode';
-import { Settings } from './Settings';
+import { Settings, SortType } from './Settings';
 import { getEditorProps, getSortKeys, writeFile } from './utils';
 
 export const sortJSON = async (isDeep: boolean = false, isReverse: boolean = false) => {
@@ -135,4 +135,12 @@ const compare = (a: any, b: any) => {
   }
 
   return x == y ? 0 : x > y ? 1 : -1;
+};
+
+// Set Sort Type
+export const setSortType = async () => {
+  const sortType = (await vscode.window.showQuickPick(['Key', 'Key Length', 'Value', 'Value Length', 'Value Type'], {
+    placeHolder: 'Please select any Sort Type',
+  })) as SortType;
+  Settings.sortType = sortType;
 };

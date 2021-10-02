@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 
+export type SortType = 'Key' | 'Key Length' | 'Value' | 'Value Length' | 'Value Type';
 export class Settings {
   static get configuration() {
     return vscode.workspace.getConfiguration('sort-json.settings');
@@ -20,7 +21,10 @@ export class Settings {
     return Settings.getSettings('isCaseSensitive') as boolean;
   }
   static get sortType() {
-    return Settings.getSettings('sortType') as 'Key' | 'Key Length' | 'Value' | 'Value Length' | 'Value Type';
+    return Settings.getSettings('sortType') as SortType;
+  }
+  static set sortType(value: SortType) {
+    Settings.setSettings('sortType', value);
   }
   static get sortValueTypeOrder() {
     return (

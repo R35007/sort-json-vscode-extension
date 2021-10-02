@@ -1,8 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { SORT_JSON, SORT_JSON_DEEP, SORT_JSON_DEEP_REVERSE, SORT_JSON_REVERSE } from './enum';
-import { sortJSON } from './sortJSON';
+import { SET_SORT_TYPE, SORT_JSON, SORT_JSON_DEEP, SORT_JSON_DEEP_REVERSE, SORT_JSON_REVERSE } from './enum';
+import { setSortType, sortJSON } from './sortJSON';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -15,6 +15,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand(SORT_JSON_REVERSE, () => sortJSON(false, true)));
   // Sort JSON Deep Reverse
   context.subscriptions.push(vscode.commands.registerCommand(SORT_JSON_DEEP_REVERSE, () => sortJSON(true, true)));
+  // Set Sort Type
+  context.subscriptions.push(vscode.commands.registerCommand(SET_SORT_TYPE, () => setSortType()));
 }
 
 // this method is called when your extension is deactivated

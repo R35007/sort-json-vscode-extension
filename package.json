@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "4.0.0",
+	"version": "5.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -38,26 +38,36 @@
 		"onCommand:sort-json.sortJSON",
 		"onCommand:sort-json.sortJSONDeep",
 		"onCommand:sort-json.sortJSONReverse",
-		"onCommand:sort-json.sortJSONDeepReverse"
+		"onCommand:sort-json.sortJSONDeepReverse",
+		"onCommand:sort-json.setSortType"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
 				"command": "sort-json.sortJSON",
-				"title": "Sort JSON"
+				"title": "Sort",
+				"category": "Sort JSON"
 			},
 			{
 				"command": "sort-json.sortJSONDeep",
-				"title": "Sort JSON Deep"
+				"title": "Sort Deep",
+				"category": "Sort JSON"
 			},
 			{
 				"command": "sort-json.sortJSONReverse",
-				"title": "Sort JSON Reverse"
+				"title": "Sort Reverse",
+				"category": "Sort JSON"
 			},
 			{
 				"command": "sort-json.sortJSONDeepReverse",
-				"title": "Sort JSON Deep Reverse"
+				"title": "Sort Deep Reverse",
+				"category": "Sort JSON"
+			},
+			{
+				"command": "sort-json.setSortType",
+				"title": "Set Sort Type",
+				"category": "Sort JSON"
 			}
 		],
 		"configuration": {
