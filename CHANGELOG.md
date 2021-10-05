@@ -1,5 +1,9 @@
 # Change Log
 
+## v6.0.0
+
+- added editor context - `Set Sort Type`: Set JSON Object Sorting Type.
+
 ## v5.0.0
 
 - added Command - `Sort JSON: Set Sort Type`: Set JSON Object Sorting Type.

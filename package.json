@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "5.0.0",
+	"version": "6.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -88,13 +88,17 @@
 						},
 						"sortJSONDeepReverse": {
 							"type": "boolean"
+						},
+						"setSortType": {
+							"type": "boolean"
 						}
 					},
 					"default": {
 						"sortJSON": true,
 						"sortJSONDeep": true,
 						"sortJSONReverse": true,
-						"sortJSONDeepReverse": true
+						"sortJSONDeepReverse": true,
+						"setSortType": true
 					},
 					"description": "Which editor context menu commands to show"
 				},
@@ -177,6 +181,12 @@
 					"when": "config.sort-json.settings.contextMenu.sortJSONDeepReverse",
 					"command": "sort-json.sortJSONDeepReverse",
 					"title": "Sort JSON Deep Reverse",
+					"group": "sort-json"
+				},
+				{
+					"when": "config.sort-json.settings.contextMenu.setSortType",
+					"command": "sort-json.setSortType",
+					"title": "Set Sort Type",
 					"group": "sort-json"
 				}
 			]
