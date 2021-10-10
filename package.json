@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "6.0.0",
+	"version": "7.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -39,6 +39,7 @@
 		"onCommand:sort-json.sortJSONDeep",
 		"onCommand:sort-json.sortJSONReverse",
 		"onCommand:sort-json.sortJSONDeepReverse",
+		"onCommand:sort-json.toggleCaseSensitive",
 		"onCommand:sort-json.setSortType"
 	],
 	"main": "./out/extension.js",
@@ -68,6 +69,11 @@
 				"command": "sort-json.setSortType",
 				"title": "Set Sort Type",
 				"category": "Sort JSON"
+			},
+			{
+				"command": "sort-json.toggleCaseSensitive",
+				"title": "Toggle Sort Case-Sensitive",
+				"category": "Sort JSON"
 			}
 		],
 		"configuration": {
@@ -91,6 +97,9 @@
 						},
 						"setSortType": {
 							"type": "boolean"
+						},
+						"toggleSortCaseSensitive": {
+							"type": "boolean"
 						}
 					},
 					"default": {
@@ -98,7 +107,8 @@
 						"sortJSONDeep": true,
 						"sortJSONReverse": true,
 						"sortJSONDeepReverse": true,
-						"setSortType": true
+						"setSortType": true,
+						"toggleSortCaseSensitive": true
 					},
 					"description": "Which editor context menu commands to show"
 				},
@@ -162,31 +172,31 @@
 				{
 					"when": "config.sort-json.settings.contextMenu.sortJSON",
 					"command": "sort-json.sortJSON",
-					"title": "Sort JSON",
 					"group": "sort-json"
 				},
 				{
 					"when": "config.sort-json.settings.contextMenu.sortJSONDeep",
 					"command": "sort-json.sortJSONDeep",
-					"title": "Sort JSON Deep",
 					"group": "sort-json"
 				},
 				{
 					"when": "config.sort-json.settings.contextMenu.sortJSONReverse",
 					"command": "sort-json.sortJSONReverse",
-					"title": "Sort JSON Reverse",
 					"group": "sort-json"
 				},
 				{
 					"when": "config.sort-json.settings.contextMenu.sortJSONDeepReverse",
 					"command": "sort-json.sortJSONDeepReverse",
-					"title": "Sort JSON Deep Reverse",
 					"group": "sort-json"
 				},
 				{
 					"when": "config.sort-json.settings.contextMenu.setSortType",
 					"command": "sort-json.setSortType",
-					"title": "Set Sort Type",
+					"group": "sort-json"
+				},
+				{
+					"when": "config.sort-json.settings.contextMenu.toggleSortCaseSensitive",
+					"command": "sort-json.toggleCaseSensitive",
 					"group": "sort-json"
 				}
 			]

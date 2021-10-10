@@ -20,6 +20,9 @@ export class Settings {
   static get isCaseSensitive() {
     return Settings.getSettings('isCaseSensitive') as boolean;
   }
+  static set isCaseSensitive(value: boolean) {
+    Settings.setSettings('isCaseSensitive', value);
+  }
   static get sortType() {
     return Settings.getSettings('sortType') as SortType;
   }

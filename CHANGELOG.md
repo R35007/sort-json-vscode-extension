@@ -1,5 +1,9 @@
 # Change Log
 
+## v7.0.0
+
+- added `Sort JSON: Toggle Sort Case-Sensitive` command and editor context.
+
 ## v6.0.0
 
 - added editor context - `Set Sort Type`: Set JSON Object Sorting Type.

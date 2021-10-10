@@ -21,6 +21,7 @@ This extension contributes the following commands:
 - `Sort JSON: Sort Reverse`: Sort JSON object descending.
 - `Sort JSON: Sort Deep Reverse`: Sort all nested JSON object descending.
 - `Sort JSON: Set Sort Type`: Set JSON Object Sorting Type.
+- `Sort JSON: Toggle Sort Case-Sensitive`: Toggles Sort Sort Case-Sensitive.
 
 ## Extension Settings
 
