@@ -41,4 +41,16 @@ export class Settings {
       ]
     );
   }
+  static get deepSortLevel() {
+    return Settings.getSettings('deepSortLevel') as number;
+  }
+  static get ignoreArraysOnDeepSort() {
+    return Settings.getSettings('ignoreArraysOnDeepSort') as boolean;
+  }
+  static get ignoreObjectsOnDeepSort() {
+    return Settings.getSettings('ignoreObjectsOnDeepSort') as boolean;
+  }
+  static get excludePaths() {
+    return (Settings.getSettings('excludePaths') as string[]) || [];
+  }
 }

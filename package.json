@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "7.0.0",
+	"version": "8.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -164,6 +164,30 @@
 					"uniqueItems": true,
 					"additionalItems": false,
 					"description": "Set Value Type Sort Order. This order works when you select sortType as 'Value type'."
+				},
+				"sort-json.settings.ignoreArraysOnDeepSort": {
+					"type": "boolean",
+					"default": false,
+					"description": "Set to true to ignore Arrays on deep sort"
+				},
+				"sort-json.settings.ignoreObjectsOnDeepSort": {
+					"type": "boolean",
+					"default": false,
+					"description": "Set to true to ignore Objects on deep sort"
+				},
+				"sort-json.settings.deepSortLevel": {
+					"type": "number",
+					"default": -1,
+					"description": "Set deep sort level. Set to -1 for full deep sort"
+				},
+				"sort-json.settings.excludePaths": {
+					"type":"array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"additionalItems": true,
+					"description": "Set exclude path for deep sort"
 				}
 			}
 		},

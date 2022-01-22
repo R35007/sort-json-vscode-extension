@@ -1,5 +1,15 @@
 # Change Log
 
+## v8.0.0
+
+- Bug Fixes
+  - Not using editors indent size on sorting - `Fixed`.
+- Added
+  - `sort-json.settings.ignoreArraysOnDeepSort` - If set to true, It ignores Arrays on deep sort. Still sorts the object inside the array.
+  - `sort-json.settings.ignoreObjectsOnDeepSort` - If set to true, It ignores Objects on deep sort.
+  - `sort-json.settings.deepSortLevel` - Set deep Sort level. Set to -1 to sort dull deep level.
+  - `sort-json.settings.excludePaths` - list of object paths to exclude from deep sorting. Ex: `[1].comments` or `user[0].address`
+
 ## v7.0.0
 
 - added `Sort JSON: Toggle Sort Case-Sensitive` command and editor context.

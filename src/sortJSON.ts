@@ -26,12 +26,17 @@ const sort = async <T>(
   data: T,
   isDeep: boolean = false,
   isReverse: boolean = false,
-  level: number = 0
+  level: number = 0,
+  path: string = ""
 ): Promise<T | object> => {
+
+  if(Settings.excludePaths.includes(path)) return data;
+  if (level === Settings.deepSortLevel) return data;
+
   if (_.isArray(data)) {
-    return await sortArray(data, isDeep, isReverse, level);
+    return await sortArray(data, isDeep, isReverse, level, path);
   } else if (_.isPlainObject(data)) {
-    return await sortObject(data, isDeep, isReverse, level);
+    return await sortObject(data, isDeep, isReverse, level, path);
   }
   return data;
 };
@@ -41,15 +46,18 @@ const sortArray = async (
   data: any[],
   isDeep: boolean = false,
   isReverse: boolean = false,
-  level: number = 0
+  level: number = 0,
+  path: string = ""
 ): Promise<any[]> => {
   let result: any[];
+
+
   const isCollection = data.every((d) => _.isPlainObject(d));
   const sortKeys = isCollection && !level ? (await getSortKeys(data)) || [] : [];
 
-  result = isCollection ? (sortKeys.length ? _.sortBy(data, sortKeys) : data) : data.sort(compare);
+  result = level && Settings.ignoreArraysOnDeepSort ? data : isCollection ? (sortKeys.length ? _.sortBy(data, sortKeys) : data) : data.sort(compare);
   result = isDeep
-    ? await Promise.all(result.map(async (item) => await sort(item, isDeep, isReverse, level + 1)))
+    ? await Promise.all(result.map(async (item, index) => await sort(item, isDeep, isReverse, level + 1, `${path}[${index}]`)))
     : result;
   result = isReverse ? result.reverse() : result;
 
@@ -61,14 +69,20 @@ const sortObject = async (
   data: any,
   isDeep: boolean = false,
   isReverse: boolean = false,
-  level: number = 0
+  level: number = 0,
+  path: string = ""
 ): Promise<object> => {
   let result: any = {};
 
-  const sortKeysOrder = getSortKeysOrder(data, isReverse);
-
-  for await (let key of sortKeysOrder) {
-    result[key] = isDeep ? await sort(data[key], isDeep, isReverse, level + 1) : data[key];
+  if (level && isDeep && Settings.ignoreObjectsOnDeepSort) {
+    for await (let key of Object.keys(data)) {
+      result[key] = isDeep ? await sort(data[key], isDeep, isReverse, level + 1, path ? `${path}.${key}` : key) : data[key];
+    }
+  } else {
+    const sortKeysOrder = getSortKeysOrder(data, isReverse);
+    for await (let key of sortKeysOrder) {
+      result[key] = isDeep ? await sort(data[key], isDeep, isReverse, level + 1, path ? `${path}.${key}` : key) : data[key];
+    }
   }
 
   return result;

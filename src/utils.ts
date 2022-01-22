@@ -22,7 +22,7 @@ export const writeFile = (
   data: object = {}
 ) => {
   editor.edit((editBuilder) => {
-    editBuilder.replace(replaceRange, JSON.stringify(data, null, 2));
+    editBuilder.replace(replaceRange, JSON.stringify(data, null, editor.options.tabSize));
     vscode.window.showInformationMessage('Sorted Successfully');
   });
 };
