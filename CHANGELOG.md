@@ -1,5 +1,10 @@
 # Change Log
 
+## v8.1.0
+
+ - Reduced build size
+ - Added editor context sub menus. Now all sort json commands comes under a `Sort JSON` sub menu.
+
 ## v8.0.0
 
 - Bug Fixes

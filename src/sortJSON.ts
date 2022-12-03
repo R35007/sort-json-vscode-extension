@@ -160,8 +160,7 @@ export const setSortType = async () => {
   vscode.window.showInformationMessage(`Sort Type is set to : ${sortType}`);
 };
 
-export const toggleCaseSensitive = () => {
-  const isCaseSensitive = !Settings.isCaseSensitive;
+export const setCaseSensitive = (isCaseSensitive: boolean) => {
   Settings.isCaseSensitive = isCaseSensitive;
-  vscode.window.showInformationMessage(`Sort is now : ${isCaseSensitive ? 'Case-Sensitive' : 'Case-Insensitive'}`);
+  vscode.window.showInformationMessage(`Sort is now : ${isCaseSensitive ? 'Case-Sensitive' : 'Case-InSensitive'}`);
 };

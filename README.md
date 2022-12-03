@@ -35,6 +35,6 @@ This extension contributes the following settings:
 
 ## Preview
 
-<img width="600" src="./images/preview.gif">
+<img width="600" src="https://user-images.githubusercontent.com/23217228/205433864-c2bef3b1-cb6a-4b69-a61b-410cc1728e2c.gif">
 
 **Enjoy!**

@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "8.0.0",
+	"version": "8.1.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -39,7 +39,8 @@
 		"onCommand:sort-json.sortJSONDeep",
 		"onCommand:sort-json.sortJSONReverse",
 		"onCommand:sort-json.sortJSONDeepReverse",
-		"onCommand:sort-json.toggleCaseSensitive",
+		"onCommand:sort-json.setCaseSensitive",
+		"onCommand:sort-json.setCaseInSensitive",
 		"onCommand:sort-json.setSortType"
 	],
 	"main": "./out/extension.js",
@@ -72,61 +73,25 @@
 			},
 			{
 				"command": "sort-json.toggleCaseSensitive",
-				"title": "Toggle Sort Case-Sensitive",
+				"title": "Toggle Case-Sensitive",
+				"category": "Sort JSON"
+			},
+			{
+				"command": "sort-json.setCaseSensitive",
+				"title": "Is Case-Sensitive",
+				"category": "Sort JSON"
+			},
+			{
+				"command": "sort-json.setCaseInSensitive",
+				"title": "✓⠀Is Case-Sensitive",
 				"category": "Sort JSON"
 			}
 		],
 		"configuration": {
 			"title": "Sort JSON",
 			"properties": {
-				"sort-json.settings.contextMenu": {
-					"type": "object",
-					"additionalProperties": false,
-					"properties": {
-						"sortJSON": {
-							"type": "boolean"
-						},
-						"sortJSONDeep": {
-							"type": "boolean"
-						},
-						"sortJSONReverse": {
-							"type": "boolean"
-						},
-						"sortJSONDeepReverse": {
-							"type": "boolean"
-						},
-						"setSortType": {
-							"type": "boolean"
-						},
-						"toggleSortCaseSensitive": {
-							"type": "boolean"
-						}
-					},
-					"default": {
-						"sortJSON": true,
-						"sortJSONDeep": true,
-						"sortJSONReverse": true,
-						"sortJSONDeepReverse": true,
-						"setSortType": true,
-						"toggleSortCaseSensitive": true
-					},
-					"description": "Which editor context menu commands to show"
-				},
-				"sort-json.settings.orderOverride": {
-					"type": "array",
-					"default": [],
-					"items": {
-						"type": "string"
-					},
-					"additionalItems": true,
-					"description": "Settings to override the sort order (i.e. to be at the start of the order)"
-				},
-				"sort-json.settings.isCaseSensitive": {
-					"type": "boolean",
-					"default": false,
-					"description": "Set to true to compare with case sensitive in sorting"
-				},
 				"sort-json.settings.sortType": {
+					"order": 1,
 					"type": "string",
 					"default": "Key",
 					"enum": [
@@ -138,7 +103,24 @@
 					],
 					"description": "Set JSON Object Sorting Type"
 				},
+				"sort-json.settings.isCaseSensitive": {
+					"order": 2,
+					"type": "boolean",
+					"default": false,
+					"description": "Set to true to compare with case sensitive in sorting"
+				},
+				"sort-json.settings.orderOverride": {
+					"order": 3,
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"additionalItems": true,
+					"description": "Settings to override the sort order (i.e. to be at the start of the order)"
+				},
 				"sort-json.settings.sortValueTypeOrder": {
+					"order": 4,
 					"type": "array",
 					"default": [
 						"Boolean",
@@ -166,65 +148,157 @@
 					"description": "Set Value Type Sort Order. This order works when you select sortType as 'Value type'."
 				},
 				"sort-json.settings.ignoreArraysOnDeepSort": {
+					"order": 5,
 					"type": "boolean",
 					"default": false,
 					"description": "Set to true to ignore Arrays on deep sort"
 				},
 				"sort-json.settings.ignoreObjectsOnDeepSort": {
+					"order": 6,
 					"type": "boolean",
 					"default": false,
 					"description": "Set to true to ignore Objects on deep sort"
 				},
 				"sort-json.settings.deepSortLevel": {
+					"order": 7,
 					"type": "number",
 					"default": -1,
 					"description": "Set deep sort level. Set to -1 for full deep sort"
 				},
 				"sort-json.settings.excludePaths": {
-					"type":"array",
+					"order": 8,
+					"type": "array",
 					"default": [],
 					"items": {
 						"type": "string"
 					},
 					"additionalItems": true,
 					"description": "Set exclude path for deep sort"
+				},
+				"sort-json.settings.contextMenu": {
+					"order": 9,
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"sortJSONSubMenu": {
+							"type": "boolean",
+							"description": "Show All sort json commands inside Sort JSON sub menu "
+						},
+						"sortJSON": {
+							"type": "boolean"
+						},
+						"sortJSONDeep": {
+							"type": "boolean"
+						},
+						"sortJSONReverse": {
+							"type": "boolean"
+						},
+						"sortJSONDeepReverse": {
+							"type": "boolean"
+						},
+						"setSortType": {
+							"type": "boolean"
+						},
+						"caseSensitive": {
+							"type": "boolean"
+						}
+					},
+					"default": {
+						"sortJSONSubMenu": true,
+						"sortJSON": false,
+						"sortJSONDeep": false,
+						"sortJSONReverse": false,
+						"sortJSONDeepReverse": false,
+						"setSortType": false,
+						"caseSensitive": false
+					},
+					"description": "Which editor context menu commands to show"
 				}
 			}
 		},
 		"menus": {
+			"commandPalette": [
+				{
+					"command": "sort-json.setCaseSensitive",
+					"title": "Is Case-Sensitive",
+					"category": "Sort JSON"
+				},
+				{
+					"command": "sort-json.setCaseSensitive",
+					"when": "false"
+				},
+				{
+					"command": "sort-json.setCaseInSensitive",
+					"when": "false"
+				}
+			],
 			"editor/context": [
 				{
 					"when": "config.sort-json.settings.contextMenu.sortJSON",
 					"command": "sort-json.sortJSON",
-					"group": "sort-json"
+					"group": "sort-json@1"
 				},
 				{
 					"when": "config.sort-json.settings.contextMenu.sortJSONDeep",
 					"command": "sort-json.sortJSONDeep",
-					"group": "sort-json"
+					"group": "sort-json@2"
 				},
 				{
 					"when": "config.sort-json.settings.contextMenu.sortJSONReverse",
 					"command": "sort-json.sortJSONReverse",
-					"group": "sort-json"
+					"group": "sort-json@3"
 				},
 				{
 					"when": "config.sort-json.settings.contextMenu.sortJSONDeepReverse",
 					"command": "sort-json.sortJSONDeepReverse",
-					"group": "sort-json"
+					"group": "sort-json@4"
 				},
 				{
-					"when": "config.sort-json.settings.contextMenu.setSortType",
-					"command": "sort-json.setSortType",
-					"group": "sort-json"
-				},
-				{
-					"when": "config.sort-json.settings.contextMenu.toggleSortCaseSensitive",
-					"command": "sort-json.toggleCaseSensitive",
+					"when": "config.sort-json.settings.contextMenu.sortJSONSubMenu",
+					"submenu": "sort-json.subMenu",
 					"group": "sort-json"
 				}
+			],
+			"sort-json.subMenu": [
+				{
+					"command": "sort-json.sortJSON",
+					"group": "sort-json@1"
+				},
+				{
+					"command": "sort-json.sortJSONDeep",
+					"group": "sort-json@2"
+				},
+				{
+					"command": "sort-json.sortJSONReverse",
+					"group": "sort-json@3"
+				},
+				{
+					"command": "sort-json.sortJSONDeepReverse",
+					"group": "sort-json@4"
+				},
+				{
+					"command": "sort-json.setSortType",
+					"group": "sort-json@5"
+				},
+				{
+					"when": "!config.sort-json.settings.isCaseSensitive",
+					"command": "sort-json.setCaseSensitive",
+					"group": "sort-json@6"
+				},
+				{
+					"when": "config.sort-json.settings.isCaseSensitive",
+					"command": "sort-json.setCaseInSensitive",
+					"group": "sort-json@6"
+				}
 			]
-		}
+		},
+		"submenus": [
+			{
+				"id": "sort-json.subMenu",
+				"label": "Sort JSON",
+				"group": "sort-json"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
