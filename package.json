@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "8.1.0",
+	"version": "9.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -39,6 +39,7 @@
 		"onCommand:sort-json.sortJSONDeep",
 		"onCommand:sort-json.sortJSONReverse",
 		"onCommand:sort-json.sortJSONDeepReverse",
+		"onCommand:sort-json.sortJSONByCustomComparison",
 		"onCommand:sort-json.setCaseSensitive",
 		"onCommand:sort-json.setCaseInSensitive",
 		"onCommand:sort-json.setSortType"
@@ -53,17 +54,22 @@
 			},
 			{
 				"command": "sort-json.sortJSONDeep",
-				"title": "Sort Deep",
+				"title": "Deep Sort",
 				"category": "Sort JSON"
 			},
 			{
 				"command": "sort-json.sortJSONReverse",
-				"title": "Sort Reverse",
+				"title": "Reverse Sort ",
 				"category": "Sort JSON"
 			},
 			{
 				"command": "sort-json.sortJSONDeepReverse",
-				"title": "Sort Deep Reverse",
+				"title": "Deep Reverse Sort",
+				"category": "Sort JSON"
+			},
+			{
+				"command": "sort-json.sortJSONByCustomComparison",
+				"title": "Custom Comparison Sort",
 				"category": "Sort JSON"
 			},
 			{
@@ -175,6 +181,40 @@
 					"additionalItems": true,
 					"description": "Set exclude path for deep sort"
 				},
+				"sort-json.settings.customComparisons": {
+					"type": "array",
+					"additionalItems": true,
+					"default": [],
+					"description": "Provide your custom comparison to list in the custom comparisons quick pick",
+					"items": {
+						"type": "object",
+						"additionalProperties": false,
+						"required": [
+							"comparison",
+							"description"
+						],
+						"examples": [
+							{
+								"comparison": "a - b",
+								"description": "sort ascending"
+							}
+						],
+						"properties": {
+							"comparison": {
+								"type": "string",
+								"examples": [
+									"a - b",
+									"b - a",
+									"a.toLowerCase() - b.toLowerCase()"
+								],
+								"description": "Set Custom Comparison code"
+							},
+							"description": {
+								"type": "string"
+							}
+						}
+					}
+				},
 				"sort-json.settings.contextMenu": {
 					"order": 9,
 					"type": "object",
@@ -196,6 +236,9 @@
 						"sortJSONDeepReverse": {
 							"type": "boolean"
 						},
+						"sortJSONByCustomComparison": {
+							"type": "boolean"
+						},
 						"setSortType": {
 							"type": "boolean"
 						},
@@ -209,6 +252,7 @@
 						"sortJSONDeep": false,
 						"sortJSONReverse": false,
 						"sortJSONDeepReverse": false,
+						"sortJSONByCustomComparison": false,
 						"setSortType": false,
 						"caseSensitive": false
 					},
@@ -254,6 +298,11 @@
 					"group": "sort-json@4"
 				},
 				{
+					"when": "config.sort-json.settings.contextMenu.sortJSONByCustomComparison",
+					"command": "sort-json.sortJSONByCustomComparison",
+					"group": "sort-json@5"
+				},
+				{
 					"when": "config.sort-json.settings.contextMenu.sortJSONSubMenu",
 					"submenu": "sort-json.subMenu",
 					"group": "sort-json"
@@ -277,18 +326,22 @@
 					"group": "sort-json@4"
 				},
 				{
-					"command": "sort-json.setSortType",
+					"command": "sort-json.sortJSONByCustomComparison",
 					"group": "sort-json@5"
+				},
+				{
+					"command": "sort-json.setSortType",
+					"group": "sort-json@6"
 				},
 				{
 					"when": "!config.sort-json.settings.isCaseSensitive",
 					"command": "sort-json.setCaseSensitive",
-					"group": "sort-json@6"
+					"group": "sort-json@7"
 				},
 				{
 					"when": "config.sort-json.settings.isCaseSensitive",
 					"command": "sort-json.setCaseInSensitive",
-					"group": "sort-json@6"
+					"group": "sort-json@7"
 				}
 			]
 		},

@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import { Commands } from './enum';
 import { Settings } from './Settings';
-import { setCaseSensitive, setSortType, sortJSON } from './sortJSON';
+import { setCaseSensitive, setSortType, sortJSON, sortJSONByCustomComparison } from './sortJSON';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -16,6 +16,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand(Commands.SORT_JSON_REVERSE, () => sortJSON(false, true)));
   // Sort JSON Deep Reverse
   context.subscriptions.push(vscode.commands.registerCommand(Commands.SORT_JSON_DEEP_REVERSE, () => sortJSON(true, true)));
+  // Sort JSON By Custom Comparison
+  context.subscriptions.push(vscode.commands.registerCommand(Commands.SORT_JSON_BY_CUSTOM_COMPARISON, () => sortJSONByCustomComparison()));
+  
   // Set Sort Type
   context.subscriptions.push(vscode.commands.registerCommand(Commands.SET_SORT_TYPE, () => setSortType()));
   // Toggle sort case sensitive

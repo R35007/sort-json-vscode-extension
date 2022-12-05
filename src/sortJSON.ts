@@ -2,7 +2,29 @@ import * as JPH from 'json-parse-helpfulerror';
 import * as _ from 'lodash';
 import * as vscode from 'vscode';
 import { Settings, SortType } from './Settings';
-import { getEditorProps, getSortKeys, writeFile } from './utils';
+import { getCustomComparison, getEditorProps, getSortKeys, writeFile } from './utils';
+import DefaultCustomComparisons from "./defaultCustomComparisons";
+
+export const sortJSONByCustomComparison = async (isDeep: boolean = false, isReverse: boolean = false) => {
+  try {
+    const editorProps = getEditorProps();
+    if (!editorProps) return;
+
+    const customComparisons = [...Settings.customComparisons, ...DefaultCustomComparisons];
+    const quickPickItems = customComparisons.map(cc => ({ label: cc.comparison, description: cc.description, value: cc.comparison }));
+    const customComparisonObj: any = await getCustomComparison(quickPickItems);
+
+    const data = JPH.parse(editorProps.selectedText || editorProps.editorText);
+    
+    const sortedData = await getSortedDataByCustomComparison(data, customComparisonObj.value);
+
+    const replaceRange = editorProps.selectedText ? editorProps.selection : editorProps.textRange;
+
+    writeFile(editorProps.editor, replaceRange, sortedData);
+  } catch (err: any) {
+    vscode.window.showErrorMessage(`Unable to Sort. Invalid JSON: ${err.message}`);
+  }
+};
 
 export const sortJSON = async (isDeep: boolean = false, isReverse: boolean = false) => {
   try {
@@ -11,18 +33,39 @@ export const sortJSON = async (isDeep: boolean = false, isReverse: boolean = fal
 
     const data = JPH.parse(editorProps.selectedText || editorProps.editorText);
 
-    const sortedData = await sort(data, isDeep, isReverse);
+    const sortedData = await getSortedData(data, isDeep, isReverse);
 
     const replaceRange = editorProps.selectedText ? editorProps.selection : editorProps.textRange;
 
     writeFile(editorProps.editor, replaceRange, sortedData);
   } catch (err: any) {
-    vscode.window.showErrorMessage(`Invalid JSON : ${err.message}`);
+    vscode.window.showErrorMessage(`Unable to Sort. Invalid JSON: ${err.message}`);
   }
 };
 
+const getSortedDataByCustomComparison = <T extends object>(data: T, comparison: string): T => {
+  if (_.isArray(data)) {
+    return data.sort((a, b) => {
+      const obj: any = { a, b, item1: a, item2: b, key1: a, key2: b, val1: a, val2: b, x: a, y: b };
+      return Function(...Object.keys(obj), `return ${comparison}`)(...Object.values(obj));
+    });
+  } else if (_.isPlainObject(data)) {
+    const sortedEntries = Object.entries(data as object).sort(([key1, val1], [key2, val2]) => {
+      const item1 = { key: key1, val: val1 };
+      const item2 = { key: key2, val: val2 };
+      const obj: any = {
+        key1, val1, key2, val2, item1, item2,
+        a: item1, b: item2, x: item1, y: item2
+      };
+      return Function(...Object.keys(obj), `return ${comparison}`)(...Object.values(obj));
+    });
+    return _.fromPairs(sortedEntries) as T;
+  }
+  return data;
+};
+
 // Sort
-const sort = async <T>(
+const getSortedData = async <T>(
   data: T,
   isDeep: boolean = false,
   isReverse: boolean = false,
@@ -30,7 +73,7 @@ const sort = async <T>(
   path: string = ""
 ): Promise<T | object> => {
 
-  if(Settings.excludePaths.includes(path)) return data;
+  if (Settings.excludePaths.includes(path)) return data;
   if (level === Settings.deepSortLevel) return data;
 
   if (_.isArray(data)) {
@@ -57,7 +100,7 @@ const sortArray = async (
 
   result = level && Settings.ignoreArraysOnDeepSort ? data : isCollection ? (sortKeys.length ? _.sortBy(data, sortKeys) : data) : data.sort(compare);
   result = isDeep
-    ? await Promise.all(result.map(async (item, index) => await sort(item, isDeep, isReverse, level + 1, `${path}[${index}]`)))
+    ? await Promise.all(result.map(async (item, index) => await getSortedData(item, isDeep, isReverse, level + 1, `${path}[${index}]`)))
     : result;
   result = isReverse ? result.reverse() : result;
 
@@ -76,12 +119,12 @@ const sortObject = async (
 
   if (level && isDeep && Settings.ignoreObjectsOnDeepSort) {
     for await (let key of Object.keys(data)) {
-      result[key] = isDeep ? await sort(data[key], isDeep, isReverse, level + 1, path ? `${path}.${key}` : key) : data[key];
+      result[key] = isDeep ? await getSortedData(data[key], isDeep, isReverse, level + 1, path ? `${path}.${key}` : key) : data[key];
     }
   } else {
     const sortKeysOrder = getSortKeysOrder(data, isReverse);
     for await (let key of sortKeysOrder) {
-      result[key] = isDeep ? await sort(data[key], isDeep, isReverse, level + 1, path ? `${path}.${key}` : key) : data[key];
+      result[key] = isDeep ? await getSortedData(data[key], isDeep, isReverse, level + 1, path ? `${path}.${key}` : key) : data[key];
     }
   }
 
@@ -138,7 +181,7 @@ const compareByValueLength = (a: any, b: any, data: any) => {
   return compare(aLength, bLength);
 };
 
-// Sort Comparision
+// Sort Comparison
 const compare = (a: any, b: any) => {
   let x = _.isString(a) ? a : JSON.stringify(a);
   let y = _.isString(b) ? b : JSON.stringify(b);

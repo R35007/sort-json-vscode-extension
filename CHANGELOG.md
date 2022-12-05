@@ -1,5 +1,10 @@
 # Change Log
 
+## v9.0.0
+
+- Added - `Custom Comparison Sort` - Provide your own custom comparison code to sort any data. Limited to only top level sort and not deep sort.
+- Added - `sort-json.settings.customComparisons` - configuration. Helps to store our custom comparison logic which will shows up in the quick pick items.
+
 ## v8.1.0
 
  - Reduced build size

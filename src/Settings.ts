@@ -53,4 +53,7 @@ export class Settings {
   static get excludePaths() {
     return (Settings.getSettings('excludePaths') as string[]) || [];
   }
+  static get customComparisons() {
+    return (Settings.getSettings('customComparisons')) as Array<{ description: string, comparison: string }>;
+  }
 }
