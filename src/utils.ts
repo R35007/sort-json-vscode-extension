@@ -29,9 +29,34 @@ export const writeFile = (
 
 export const getSortKeys = async (data: Array<object>) => {
   const keysList = data.reduce((res: string[], d) => [...res, ...Object.keys(d)], []) as string[];
-  const uniquekeysList = [...new Set(keysList)];
-  return vscode.window.showQuickPick(uniquekeysList, {
+  const uniqueKeysList = [...new Set(keysList)];
+  return vscode.window.showQuickPick(uniqueKeysList, {
     canPickMany: true,
     placeHolder: 'Please select any key to sort',
+  });
+};
+
+export const getCustomComparison = async (customComparisons: vscode.QuickPickItem[] = []) => {
+  return new Promise((resolve) => {
+    const quickPick = vscode.window.createQuickPick();
+    quickPick.title = "Custom Comparison";
+    quickPick.placeholder = 'Please provide your own custom comparison code here.';
+    quickPick.matchOnDescription = true;
+    quickPick.canSelectMany = false;
+    quickPick.items = customComparisons;
+    quickPick.onDidAccept(() => {
+      const selection = quickPick.activeItems[0];
+      resolve(selection);
+      quickPick.hide();
+    });
+    quickPick.onDidChangeValue(() => {
+      // add a new custom comparison to the pick list as the first item
+      if (!customComparisons.map(cc => cc.label).includes(quickPick.value)) {
+        const newItems = quickPick.value ? [{ label: quickPick.value, value: quickPick.value, description: "custom comparison" }, ...customComparisons] : customComparisons;
+        quickPick.items = newItems;
+      }
+    });
+    quickPick.onDidHide(() => quickPick.dispose());
+    quickPick.show();
   });
 };
