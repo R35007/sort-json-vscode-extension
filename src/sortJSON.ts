@@ -5,7 +5,7 @@ import { Settings, SortType } from './Settings';
 import { getCustomComparison, getEditorProps, getSortKeys, writeFile } from './utils';
 import DefaultCustomComparisons from "./defaultCustomComparisons";
 
-export const sortJSONByCustomComparison = async (isDeep: boolean = false, isReverse: boolean = false) => {
+export const sortJSONByCustomComparison = async () => {
   try {
     const editorProps = getEditorProps();
     if (!editorProps) return;
@@ -14,15 +14,15 @@ export const sortJSONByCustomComparison = async (isDeep: boolean = false, isReve
     const quickPickItems = customComparisons.map(cc => ({ label: cc.comparison, description: cc.description, value: cc.comparison }));
     const customComparisonObj: any = await getCustomComparison(quickPickItems);
 
+    if(!customComparisonObj) return;
+
     const data = JPH.parse(editorProps.selectedText || editorProps.editorText);
-    
     const sortedData = await getSortedDataByCustomComparison(data, customComparisonObj.value);
 
     const replaceRange = editorProps.selectedText ? editorProps.selection : editorProps.textRange;
-
     writeFile(editorProps.editor, replaceRange, sortedData);
   } catch (err: any) {
-    vscode.window.showErrorMessage(`Unable to Sort. Invalid JSON: ${err.message}`);
+    vscode.window.showErrorMessage(`Unable to Sort. ${err.message}`);
   }
 };
 
@@ -32,14 +32,12 @@ export const sortJSON = async (isDeep: boolean = false, isReverse: boolean = fal
     if (!editorProps) return;
 
     const data = JPH.parse(editorProps.selectedText || editorProps.editorText);
-
     const sortedData = await getSortedData(data, isDeep, isReverse);
 
     const replaceRange = editorProps.selectedText ? editorProps.selection : editorProps.textRange;
-
     writeFile(editorProps.editor, replaceRange, sortedData);
   } catch (err: any) {
-    vscode.window.showErrorMessage(`Unable to Sort. Invalid JSON: ${err.message}`);
+    vscode.window.showErrorMessage(`Unable to Sort. ${err.message}`);
   }
 };
 

@@ -1,5 +1,9 @@
 # Change Log
 
+## v9.1.0
+
+- Build size reduced
+- Bug fixes
 ## v9.0.0
 
 - Added - `Custom Comparison Sort` - Provide your own custom comparison code to sort any data. Limited to only top level sort and not deep sort.

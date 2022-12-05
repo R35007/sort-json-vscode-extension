@@ -38,6 +38,7 @@ export const getSortKeys = async (data: Array<object>) => {
 
 export const getCustomComparison = async (customComparisons: vscode.QuickPickItem[] = []) => {
   return new Promise((resolve) => {
+    let isResolved = false;
     const quickPick = vscode.window.createQuickPick();
     quickPick.title = "Custom Comparison";
     quickPick.placeholder = 'Please provide your own custom comparison code here.';
@@ -46,8 +47,11 @@ export const getCustomComparison = async (customComparisons: vscode.QuickPickIte
     quickPick.items = customComparisons;
     quickPick.onDidAccept(() => {
       const selection = quickPick.activeItems[0];
-      resolve(selection);
-      quickPick.hide();
+      if (!isResolved) {
+        resolve(selection);
+        isResolved = true;
+      }
+      quickPick.dispose();
     });
     quickPick.onDidChangeValue(() => {
       // add a new custom comparison to the pick list as the first item
@@ -56,7 +60,13 @@ export const getCustomComparison = async (customComparisons: vscode.QuickPickIte
         quickPick.items = newItems;
       }
     });
-    quickPick.onDidHide(() => quickPick.dispose());
+    quickPick.onDidHide(() => {
+      if (!isResolved) {
+        resolve(undefined);
+        isResolved = true;
+      }
+      quickPick.dispose();
+    });
     quickPick.show();
   });
 };
