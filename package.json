@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "9.1.0",
+	"version": "9.1.1",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -238,12 +238,6 @@
 						},
 						"sortJSONByCustomComparison": {
 							"type": "boolean"
-						},
-						"setSortType": {
-							"type": "boolean"
-						},
-						"caseSensitive": {
-							"type": "boolean"
 						}
 					},
 					"default": {
@@ -252,9 +246,7 @@
 						"sortJSONDeep": false,
 						"sortJSONReverse": false,
 						"sortJSONDeepReverse": false,
-						"sortJSONByCustomComparison": false,
-						"setSortType": false,
-						"caseSensitive": false
+						"sortJSONByCustomComparison": false
 					},
 					"description": "Which editor context menu commands to show"
 				}
@@ -262,11 +254,6 @@
 		},
 		"menus": {
 			"commandPalette": [
-				{
-					"command": "sort-json.setCaseSensitive",
-					"title": "Is Case-Sensitive",
-					"category": "Sort JSON"
-				},
 				{
 					"command": "sort-json.setCaseSensitive",
 					"when": "false"
@@ -277,6 +264,11 @@
 				}
 			],
 			"editor/context": [
+				{
+					"when": "config.sort-json.settings.contextMenu.sortJSONSubMenu",
+					"submenu": "sort-json.subMenu",
+					"group": "sort-json"
+				},
 				{
 					"when": "config.sort-json.settings.contextMenu.sortJSON",
 					"command": "sort-json.sortJSON",
@@ -301,11 +293,6 @@
 					"when": "config.sort-json.settings.contextMenu.sortJSONByCustomComparison",
 					"command": "sort-json.sortJSONByCustomComparison",
 					"group": "sort-json@5"
-				},
-				{
-					"when": "config.sort-json.settings.contextMenu.sortJSONSubMenu",
-					"submenu": "sort-json.subMenu",
-					"group": "sort-json"
 				}
 			],
 			"sort-json.subMenu": [
