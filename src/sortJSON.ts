@@ -10,11 +10,15 @@ export const sortJSONByCustomComparison = async () => {
     const editorProps = getEditorProps();
     if (!editorProps) return;
 
-    const customComparisons = [...Settings.customComparisons, ...DefaultCustomComparisons];
+    const defaultComparisonItems = Object.entries(DefaultCustomComparisons).map(([sortType, comparisonCode]) => ({
+      description: sortType,
+      comparison: comparisonCode
+    }));
+    const customComparisons = [...Settings.customComparisons, ...defaultComparisonItems];
     const quickPickItems = customComparisons.map(cc => ({ label: cc.comparison, description: cc.description, value: cc.comparison }));
     const customComparisonObj: any = await getCustomComparison(quickPickItems);
 
-    if(!customComparisonObj) return;
+    if (!customComparisonObj) return;
 
     const data = JPH.parse(editorProps.selectedText || editorProps.editorText);
     const sortedData = await getSortedDataByCustomComparison(data, customComparisonObj.value);
@@ -96,7 +100,7 @@ const sortArray = async (
   const isCollection = data.every((d) => _.isPlainObject(d));
   const sortKeys = isCollection && !level ? (await getSortKeys(data)) || [] : [];
 
-  result = level && Settings.ignoreArraysOnDeepSort ? data : isCollection ? (sortKeys.length ? _.sortBy(data, sortKeys) : data) : data.sort(compare);
+  result = level && Settings.ignoreArraysOnDeepSort ? data : isCollection ? (sortKeys.length ? _.sortBy(data, sortKeys) : data) : data.sort(compareString);
   result = isDeep
     ? await Promise.all(result.map(async (item, index) => await getSortedData(item, isDeep, isReverse, level + 1, `${path}[${index}]`)))
     : result;
@@ -137,29 +141,29 @@ const getSortKeysOrder = (data: any, isReverse: boolean) => {
 
   switch (Settings.sortType) {
     case 'Value': {
-      sortedObjectKeys = Object.keys(data).sort((a, b) => compare(data[a], data[b]));
+      sortedObjectKeys = Object.keys(data).sort((a, b) => compareString(data[a], data[b]));
       break;
     }
     case 'Value Length': {
-      sortedObjectKeys = Object.keys(data).sort((a, b) => compareByValueLength(a, b, data));
+      sortedObjectKeys = Object.keys(data).sort((a, b) => compareLength(data[a], data[b]));
       break;
     }
     case 'Value Type': {
       const typeReducer: any = (res: string[], type: string) => {
         const filteredKeys = Object.keys(data).filter((key) => eval(`_.${'is' + type}`)(data[key]));
-        return res.concat(filteredKeys.sort((a, b) => compare(data[a], data[b])));
+        return res.concat(filteredKeys.sort((a, b) => compareString(data[a], data[b])));
       };
 
       sortedObjectKeys = Settings.sortValueTypeOrder.reduce(typeReducer, []);
       break;
     }
     case 'Key Length': {
-      sortedObjectKeys = Object.keys(data).sort((a, b) => compare(('' + a).length, ('' + b).length));
+      sortedObjectKeys = Object.keys(data).sort((a, b) => compareLength(a, b));
       break;
     }
     default: {
       // Sort By Object Keys
-      sortedObjectKeys = Object.keys(data).sort(compare);
+      sortedObjectKeys = Object.keys(data).sort(compareString);
       break;
     }
   }
@@ -170,17 +174,15 @@ const getSortKeysOrder = (data: any, isReverse: boolean) => {
 };
 
 // Sort By Value Length Comparison
-const compareByValueLength = (a: any, b: any, data: any) => {
-  const aVal = data[a];
-  const bVal = data[b];
-  const aLength = _.isArray(aVal) ? aVal.length : _.isPlainObject(aVal) ? Object.keys(aVal).length : ('' + aVal).length;
-  const bLength = _.isArray(bVal) ? bVal.length : _.isPlainObject(bVal) ? Object.keys(bVal).length : ('' + bVal).length;
+const compareLength = (a: any, b: any) => {
+  const aLength = _.isArray(a) ? a.length : _.isPlainObject(a) ? Object.keys(a).length : JSON.stringify(a).length;
+  const bLength = _.isArray(b) ? b.length : _.isPlainObject(b) ? Object.keys(b).length : JSON.stringify(b).length;
 
-  return compare(aLength, bLength);
+  return aLength - bLength;
 };
 
 // Sort Comparison
-const compare = (a: any, b: any) => {
+const compareString = (a: any, b: any) => {
   let x = _.isString(a) ? a : JSON.stringify(a);
   let y = _.isString(b) ? b : JSON.stringify(b);
 
@@ -189,15 +191,25 @@ const compare = (a: any, b: any) => {
     y = _.isString(y) ? y.toUpperCase() : y;
   }
 
+  // eslint-disable-next-line eqeqeq
   return x == y ? 0 : x > y ? 1 : -1;
 };
 
 // Set Sort Type
 export const setSortType = async () => {
-  const sortType = (await vscode.window.showQuickPick(['Key', 'Key Length', 'Value', 'Value Length', 'Value Type'], {
+  const keyTypes = ['Key', 'Key Length', 'Value', 'Value Length', 'Value Type'];
+
+  // make existing keyType to come at top of the list
+  const index = keyTypes.indexOf(Settings.sortType);
+  if (index > -1) { keyTypes.splice(index, 1); }
+
+  const sortType = (await vscode.window.showQuickPick([Settings.sortType, ...keyTypes], {
     placeHolder: 'Please select any Sort Type',
-  })) as SortType;
-  Settings.sortType = sortType;
+  }));
+
+  if (!sortType) return;
+
+  Settings.sortType = sortType as SortType;
   vscode.window.showInformationMessage(`Sort Type is set to : ${sortType}`);
 };
 

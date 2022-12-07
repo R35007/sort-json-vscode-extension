@@ -1,6 +1,11 @@
 # Change Log
 
-## v9.1.1
+## v11.0.0
+
+- Build size reduced using webpack build.
+- Sort by key length issue fixed
+  
+## v10.0.0
 
 - Removed unused configurations.
   
