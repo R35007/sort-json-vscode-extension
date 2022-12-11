@@ -1,5 +1,14 @@
 # Change Log
 
+## v12.0.0
+
+- More settings has been added, modified and renamed.
+- Custom sort can also sort into multiple nested levels.
+- `Deep Sort`, `Deep Reverse Sort` has been removed. Change the level of sort to sort nested objects.
+- Can set different sort types of both `List` and `Object` sort.
+- `Sort Level` - Set sort level to `-1` to a full deep sort. Set sort level to `1` to sort only at the top level. 
+- Set sort level to `0` to avoid sorting. Default Sort Level is `-1`.
+  
 ## v11.0.0
 
 - Build size reduced using webpack build.

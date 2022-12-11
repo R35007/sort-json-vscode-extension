@@ -1,12 +1,42 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 export enum Commands {
-  SORT_JSON = 'sort-json.sortJSON',
-  SORT_JSON_DEEP = 'sort-json.sortJSONDeep',
-  SORT_JSON_REVERSE = 'sort-json.sortJSONReverse',
-  SORT_JSON_DEEP_REVERSE = 'sort-json.sortJSONDeepReverse',
-  SORT_JSON_BY_CUSTOM_COMPARISON = 'sort-json.sortJSONByCustomComparison',
-  SET_SORT_TYPE = 'sort-json.setSortType',
-  TOGGLE_CASE_SENSITIVE = 'sort-json.toggleCaseSensitive',
-  SET_CASE_SENSITIVE = 'sort-json.setCaseSensitive',
-  SET_CASE_INSENSITIVE = 'sort-json.setCaseInSensitive',
+  ascendingSort = 'sort-json.ascendingSort',
+  descendingSort = 'sort-json.descendingSort',
+  customSort = 'sort-json.customSort',
+  setObjectSortType = 'sort-json.setObjectSortType',
+  setListSortType = 'sort-json.setListSortType',
+  setSortLevel = 'sort-json.setSortLevel',
+  toggleCaseSensitive = 'sort-json.toggleCaseSensitive',
+  setCaseSensitive = 'sort-json.setCaseSensitive',
+  setCaseInSensitive = 'sort-json.setCaseInSensitive',
+};
+
+export enum SortModes {
+  both = "Both",
+  listsOnly = "Lists Only",
+  objectsOnly = "Objects Only",
+};
+
+export enum ObjectsSortTypes {
+  key = "Key",
+  keyLength = "Key Length",
+  value = "Value",
+  valueLength = "Value Length",
+  valueType = "Value Type",
 }
+
+export enum ListsSortTypes {
+  value = "Value",
+  valueLength = "Value Length",
+  valueType = "Value Type",
+}
+
+export enum ValueTypeOrder {
+  boolean = "Boolean",
+  null = "Null",
+  number = "Number",
+  string = "String",
+  array = "Array",
+  plainObject = "PlainObject",
+}
+
+

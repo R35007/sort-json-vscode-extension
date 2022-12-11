@@ -2,7 +2,7 @@
 
 Simple JSON Object and Array sort.
 
-<img width="600" src="https://user-images.githubusercontent.com/23217228/205433864-c2bef3b1-cb6a-4b69-a61b-410cc1728e2c.gif">
+<img style="max-width: 2000px;" width="90%" src="https://user-images.githubusercontent.com/23217228/206927500-6b5202ff-f06f-4b2c-8fd2-7a218ff5005a.gif">
 
 ## Features
 
@@ -33,17 +33,23 @@ Simple JSON Object and Array sort.
 
 ## Custom Sort
 
- - Right click on a file and select `Custom Comparison Sort` command from `Sort JSON`.
+ - Right click on a file and select `Do Custom Sort` command from `Sort JSON`.
  - A quick pick items shows up where we can provide our own custom logic to sort the data. 
  - We can also save our custom comparisons in settings using `sort-json.settings.customComparisons` vscode settings which will shows up in the quick pick items.
  - Please use conditional operators to sort with multiple conditions.
 
->Limitations: This custom comparison sort will only sort at the top level of the selected JSON. It will not do a deep sort.
-
 `Sort Array`
-- predefined variables - `a`, `b`, `item1`, `item2`, `key1`, `key2`, `val1`, `val2`, `x`, `y`.
-  - `item1`, `key1`, `val1`, `x` is equal to `a`.
-  - `item2`, `key2`, `val2`, `y` is equal to `b`.
+- predefined variables
+  - `item1`, `key1`, `val1`, `value1`,  `x` is equal to `a`.
+  - `item2`, `key2`, `val2`, `value2`, `y` is equal to `b`.
+  - `_`, `lodash`, `dash` - Lodash is exposed.
+- Checks
+  - `isArray`, `isList` will be `true` in array sort order
+  - `isObject` will be `false` in array sort order
+  - `isAllNumber` - returns `true` if all the items in a list are numbers
+  - `isAllString` - returns `true` if all the items in a list are string
+  - `isAllList` - returns `true` if all the items in a list are list
+  - `isAllObject`, `isCollection` - returns `true` if all the items in a list are objects
 - examples:
   ```jsonc
   // sort ascending
@@ -58,7 +64,7 @@ Simple JSON Object and Array sort.
 
   // sort by alphabetical case in-sensitive ascending
   [ "Hi", "this", "is", "a", "custom", "comparison", "sort" ]
-  // comparison code = a.toLowerCase() == b.toLowerCase() ? 0 : a.toLowerCase() > b.toLowerCase() ? 1 : -1
+  // comparison code = _.toLower(a) == _.toLower(b) ? 0 : _.toLower(a) > _.toLower(b) ? 1 : -1
   // sort to  [ "a", "comparison", "custom", "Hi", "is", "sort", "this" ]
 
   // sort collections by id
@@ -73,15 +79,23 @@ Simple JSON Object and Array sort.
   ```
   
 `Sort Object`
-- predefined variables - `a`, `b`, `item1`, `item2`, `key1`, `key2`, `val1`, `val2`, `x`, `y`.
+- predefined variables
   - `key1` - Object first key
   - `key2` - Object second key
-  - `val1` - Object first value
-  - `val2` - Object second value
+  - `val1`, `value1` - Object first value
+  - `val2`, `value2` - Object second value
   - `item1` - { key: `key1`, val: `val1` }
   - `item2` - { key: `key2`, val: `val2` }
   - `a`, `x` is equal to `item1`
   - `b`, `y` is equal to `item2`
+  - `_`, `lodash`, `dash` - Lodash is exposed.
+- Checks
+  - `isArray`, `isList` will be `false` in object sort order
+  - `isObject` will be `true` in object sort order
+  - `isAllNumber` - returns `true` if all the values in a object are numbers
+  - `isAllString` - returns `true` if all the values in a object are string
+  - `isAllList` - returns `true` if all the values in a object are list
+  - `isAllObject`, `isCollection` - returns `true` if all the values in a list are objects
 
 - examples:
   ```jsonc
@@ -92,7 +106,7 @@ Simple JSON Object and Array sort.
 
   // sort by value length
   { "name": "foo", "id": 1, "label": "first item" }
-  // comparison code = JSON.stringify(val1).length - JSON.stringify(val2).length // converting values to JSON.stringify() to get its length.
+  // comparison code = isAllString ? val1.length - val2.length : true
   // sort to  { "id": 1, "label": "foo", "name": "first item" }
   ```
 
