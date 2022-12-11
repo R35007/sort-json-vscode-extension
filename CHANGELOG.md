@@ -1,5 +1,9 @@
 # Change Log
 
+## v12.0.1
+
+- Typo fixes
+
 ## v12.0.0
 
 - More settings has been added, modified and renamed.

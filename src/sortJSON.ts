@@ -48,7 +48,7 @@ export default class SortJSON {
     if (!sortType) return;
 
     Settings.objectSortType = sortType.label as ObjectsSortTypes;
-    vscode.window.showInformationMessage(`Object Sort Type is set to : ${sortType}`);
+    vscode.window.showInformationMessage(`Object Sort Type is set to : ${sortType.label}`);
   };
 
   // Set List Sort Type
@@ -69,7 +69,7 @@ export default class SortJSON {
     if (!sortType) return;
 
     Settings.listSortType = sortType.label as ListsSortTypes;
-    vscode.window.showInformationMessage(`List Sort Type is set to : ${sortType}`);
+    vscode.window.showInformationMessage(`List Sort Type is set to : ${sortType.label}`);
   };
 
   async setCaseSensitive(isCaseSensitive: boolean) {
