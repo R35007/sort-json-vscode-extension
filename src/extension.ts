@@ -15,6 +15,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand(Commands.ascendingSort, () => sortJSON.sort()));
   // Sort Descending
   context.subscriptions.push(vscode.commands.registerCommand(Commands.descendingSort, () => sortJSON.sort(true)));
+  // Set Default Custom Sort
+  context.subscriptions.push(vscode.commands.registerCommand(Commands.setDefaultCustomSort, () => sortJSON.setDefaultCustomSort()));
   // Do Custom Sort
   context.subscriptions.push(vscode.commands.registerCommand(Commands.customSort, () => sortJSON.sort(false, true)));
   // Set Sort Level

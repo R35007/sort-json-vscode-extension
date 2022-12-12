@@ -1,5 +1,10 @@
 # Change Log
 
+## v13.1.0
+
+- Set a default custom sort code in `sort-json.settings.defaultCustomSort` settings, so that on command `Do Custom Sort` wont prompt for code each time.
+- Leave `sort-json.settings.defaultCustomSort` setting to empty to prompt you the custom sort comparison code each time on click of `Do Custom Sort` command.
+
 ## v13.0.0
 
 - Sort JSON with comments. Note: comments will not be preserved and will be removed.

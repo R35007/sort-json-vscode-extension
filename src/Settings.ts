@@ -57,6 +57,14 @@ export class Settings {
   static get customSortComparisons() {
     return (Settings.getSettings('customSortComparisons')) as Array<{ description: string, comparison: string }>;
   }
+
+  static get defaultCustomSort() {
+    return (Settings.getSettings('defaultCustomSort')) as string;
+  }
+  static set defaultCustomSort(value: string) {
+    Settings.setSettings('defaultCustomSort', value);
+  }
+
   static get contextMenu() {
     return (Settings.getSettings('contextMenu') as object) || {};
   }

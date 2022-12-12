@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "13.0.0",
+	"version": "13.1.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -37,6 +37,7 @@
 	"activationEvents": [
 		"onCommand:sort-json.ascendingSort",
 		"onCommand:sort-json.descendingSort",
+		"onCommand:sort-json.setDefaultCustomSort",
 		"onCommand:sort-json.customSort",
 		"onCommand:sort-json.setSortLevel",
 		"onCommand:sort-json.setObjectSortType",
@@ -61,6 +62,11 @@
 			{
 				"command": "sort-json.customSort",
 				"title": "Do Custom Sort",
+				"category": "Sort JSON"
+			},
+			{
+				"command": "sort-json.setDefaultCustomSort",
+				"title": "Set Default Custom Sort",
 				"category": "Sort JSON"
 			},
 			{
@@ -244,6 +250,12 @@
 							}
 						}
 					}
+				},
+				"sort-json.settings.defaultCustomSort": {
+					"order": 9,
+					"type": "string",
+					"default": "",
+					"description": "Provide your default custom sort comparison code. Leave it empty to prompt your custom comparison code each time."
 				},
 				"sort-json.settings.contextMenu": {
 					"order": 10,

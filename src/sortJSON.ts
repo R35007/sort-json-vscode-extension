@@ -30,6 +30,19 @@ export default class SortJSON {
     vscode.window.showInformationMessage(`Sort Level is set to : ${sortLevel}`);
   }
 
+  // Set Default Custom Sort
+  async setDefaultCustomSort() {
+    const defaultCustomSort = await vscode.window.showInputBox({
+      title: "Default Custom Sort",
+      value: Settings.defaultCustomSort || "",
+      placeHolder: "Please give a custom sort comparison code",
+      prompt: "Leave it empty to prompt each time on Do Custom Sort command"
+    });
+
+    Settings.defaultCustomSort = defaultCustomSort || "";
+    vscode.window.showInformationMessage(`Default Custom Sort is set.`);
+  }
+
   // Set Object Sort Type
   async setObjectSortType() {
     const keyTypes = Object.values(ObjectsSortTypes);
@@ -90,7 +103,9 @@ export default class SortJSON {
 
       // Get custom comparison string.
       if (this.isCustomSort) {
-        const customComparison = await getCustomComparison(this.customComparison);
+        const customComparison = Settings.defaultCustomSort?.length
+          ? { label: Settings.defaultCustomSort, description: "Default custom sort" }
+          : await getCustomComparison(this.customComparison);
         if (!customComparison) return; // return if no custom comparison is selected
         this.customComparison = customComparison; // set custom comparison only if custom comparison is selected
       }
