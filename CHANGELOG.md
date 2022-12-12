@@ -1,5 +1,9 @@
 # Change Log
 
+## v13.0.0
+
+- Sort JSON with comments. Note: comments will not be preserved and will be removed.
+
 ## v12.1.0
 
 - Sort By Value Length not working issue fixed.

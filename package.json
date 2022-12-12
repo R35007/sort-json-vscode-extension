@@ -407,7 +407,7 @@
 		"compile-tests": "tsc -p . --outDir out"
 	},
 	"devDependencies": {
-		"@types/json-parse-helpfulerror": "^1.0.1",
+		"@types/comment-json": "^2.4.2",
 		"@types/lodash": "^4.14.191",
 		"@types/node": "14.x",
 		"@types/vscode": "^1.73.0",
@@ -420,13 +420,7 @@
 		"webpack-cli": "^4.9.2"
 	},
 	"dependencies": {
-		"json-parse-helpfulerror": "^1.0.3",
+		"comment-json": "^4.2.3",
 		"lodash": "^4.17.21"
-	},
-	"__metadata": {
-		"id": "e998b582-9632-4bbf-8a73-0c385e564cd9",
-		"publisherDisplayName": "Thinker",
-		"publisherId": "d7e8a1f3-3e2a-4cbb-9922-0b82a077c082",
-		"isPreReleaseVersion": false
 	}
 }

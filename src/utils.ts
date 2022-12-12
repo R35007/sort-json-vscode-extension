@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
-import * as JPH from 'json-parse-helpfulerror';
+import * as cjson from 'comment-json';
 import sampleComparisons from "./sampleComparisons";
 import { Settings } from './Settings';
 
@@ -30,7 +30,7 @@ export const getData = (editorProps: ReturnType<typeof getEditorProps>) => {
       endDelimiter = dataText.endsWith(";") ? ";" : ",";
       dataText = dataText.substring(0, dataText.length - 1);
     };
-    const data = JPH.parse(dataText);
+    const data = cjson.parse(dataText, undefined, true) as object | any[];
     return { data, endDelimiter };
   } catch (error: any) {
     vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
@@ -46,7 +46,7 @@ export const writeFile = (
   endDelimiter: string = ''
 ) => {
   editor.edit((editBuilder) => {
-    editBuilder.replace(replaceRange, JSON.stringify(data, null, editor.options.tabSize) + endDelimiter);
+    editBuilder.replace(replaceRange, cjson.stringify(data, null, editor.options.tabSize) + endDelimiter);
     vscode.window.showInformationMessage('Sorted Successfully');
   });
 };
@@ -161,7 +161,7 @@ export const customListComparison = (a: any, b: any, {
   return Function(...Object.keys(obj), `return ${comparisonString}`)(...Object.values(obj));
 };
 
-export const customObjectComparison = ([key1, val1]: [string, any], [key2, val2]: [string, any], {
+export const customObjectComparison = ([key1, val1]: any[] = [], [key2, val2]: any[] = [], {
   comparisonString = "key1.length - key2.length",
   isAllNumber = false,
   isAllString = false,

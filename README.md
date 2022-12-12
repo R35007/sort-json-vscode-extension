@@ -6,10 +6,9 @@ Simple JSON Object and Array sort.
 
 ## Features
 
+- Sort JSON that contains comments.
 - Sort Ascending
 - Sort Descending
-- Sort Ascending Deep
-- Sort Descending Deep
 - Sort By Value
 - Sort By Key
 - Sort By Value Length
