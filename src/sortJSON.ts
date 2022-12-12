@@ -97,7 +97,7 @@ export default class SortJSON {
 
       // Get keys to sort if data is a collection
       const isCollection = _.isArray(data) && data.every(_.isPlainObject); // Check is every item in an array is a object
-      if (!this.isCustomSort && isCollection) {
+      if (!this.isCustomSort && Settings.listSortType !== ListsSortTypes.valueLength && isCollection) {
         const keys = (data as any[]).reduce((keys, item) => keys.concat(Object.keys(item)), []);
         const keysToSort = await getKeysToSort([...new Set(keys)] as string[]);
         if (!keysToSort || !keysToSort.length) return;
@@ -202,7 +202,7 @@ export default class SortJSON {
       // If list get length, if object get size else convert to string and get length
       const getLength = (val) => {
         if (_.isArray(val)) return val.length;
-        if (_.isPlainObject(val)) return val.size;
+        if (_.isPlainObject(val)) return Object.keys(val).length;
         if (_.isInteger(parseInt(val))) return val;
         return _.toString(val).length;
       };
@@ -253,7 +253,7 @@ export default class SortJSON {
       if (isAllString && Settings.isCaseSensitive) return arr.sort(([_key1, val1], [_key2, val2]) => val1 === val2 ? 0 : val1 > val2 ? 1 : -1).map(([key]) => key);
       if (isAllString && !Settings.isCaseSensitive) return arr.sort(([_key1, val1], [_key2, val2]) => _.toLower(val1) === _.toLower(val2) ? 0 : _.toLower(val1) > _.toLower(val2) ? 1 : -1).map(([key]) => key);
       if (isAllList) return arr.sort(([_key1, val1], [_key2, val2]) => val1.length - val2.length).map(([key]) => key);
-      if (isAllObject) return arr.sort(([_key1, val1], [_key2, val2]) => val1.size - val2.size).map(([key]) => key);
+      if (isAllObject) return arr.sort(([_key1, val1], [_key2, val2]) => Object.keys(val1).length - Object.keys(val2).length).map(([key]) => key);
 
       return arr.map(([key]) => key).sort();
     }
@@ -263,7 +263,7 @@ export default class SortJSON {
       // If list get length, if object get size else convert to string and get length
       const getLength = (val) => {
         if (_.isArray(val)) return val.length;
-        if (_.isPlainObject(val)) return val.size;
+        if (_.isPlainObject(val)) return Object.keys(val).length;
         if (_.isInteger(parseInt(val))) return val;
         return _.toString(val).length;
       };

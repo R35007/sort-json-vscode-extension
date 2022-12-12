@@ -1,5 +1,9 @@
 # Change Log
 
+## v12.1.0
+
+- Sort By Value Length not working issue fixed.
+
 ## v12.0.1
 
 - Typo fixes
