@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "13.1.0",
+	"version": "13.1.1",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",

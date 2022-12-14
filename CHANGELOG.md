@@ -1,5 +1,9 @@
 # Change Log
 
+## v13.1.1
+
+- exculde path can accept keys with special characters. ex: `a.b["foo-bar"][0].c`
+
 ## v13.1.0
 
 - Set a default custom sort code in `sort-json.settings.defaultCustomSort` settings, so that on command `Do Custom Sort` wont prompt for code each time.

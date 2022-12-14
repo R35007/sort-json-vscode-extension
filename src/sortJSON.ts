@@ -169,7 +169,12 @@ export default class SortJSON {
     const overriddenKeys = [...new Set([...Settings.orderOverrideKeys, ...orderedKeys])]; //  Get Unique Keys
     const sortedKeys = this.isDescending ? overriddenKeys.reverse() : overriddenKeys; // Sort keys descending
 
-    const result = sortedKeys.reduce((res, key) => ({ ...res, [key]: this.#getSortedJson(data[key], level - 1, path ? `${path}.${key}` : key) }), {});
+    const result = sortedKeys.reduce((res, key) => {
+      // set key in square brackets if it contains any special charectors. 
+      // ex : "foobar" -> path.foobar, "foo_bar" -> path.foo_bar, "foo-bar" -> path["foo-bar"], "foo bar" -> path["foo bar"]
+      const nestedPath = (/\W/).test(key) ? `${path}.${key}` : `${path}["${key}"]`;
+      return { ...res, [key]: this.#getSortedJson(data[key], level - 1, path ? nestedPath : key) };
+    }, {});
 
     return result;
   };
