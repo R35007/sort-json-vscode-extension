@@ -1,8 +1,16 @@
 # Change Log
 
+## v14.0.0
+
+- Support for Sort JSON with comments. 
+- Support for Sort JSON with ES6 standards ( allows single quotes and keys with no quotes ). 
+- Added - `...` spread operator to spread remaining keys in middle of overridden keys.
+  - For Example:  `sort-json.settings.orderOverrideKeys`: [ "id", "...", "body" ]
+  - Here, `...` values will be replaced by the remaining object ordered keys.
+
 ## v13.1.1
 
-- exculde path can accept keys with special characters. ex: `a.b["foo-bar"][0].c`
+- exclude path can accept keys with special characters. ex: `a.b["foo-bar"][0].c`
 
 ## v13.1.0
 

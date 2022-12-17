@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as vscode from 'vscode';
 import { ListsSortTypes, ObjectsSortTypes, SortModes } from './enum';
 import { Settings } from './Settings';
-import { customListComparison, customObjectComparison, getCustomComparison, getData, getEditorProps, getKeysToSort, writeFile } from './utils';
+import { copySymbolsToObj, customListComparison, customObjectComparison, getCustomComparison, getData, getEditorProps, getKeysToSort } from './utils';
 
 export default class SortJSON {
 
@@ -94,7 +94,7 @@ export default class SortJSON {
     try {
       const editorProps = getEditorProps();
 
-      const { data, endDelimiter } = getData(editorProps);
+      const { data, endDelimiter, stringify = JSON.stringify } = getData(editorProps);
 
       if (!editorProps || !data) return; // return if no data to sort
 
@@ -122,7 +122,12 @@ export default class SortJSON {
       const sortedJson = this.#getSortedJson(data, Settings.sortLevel, "");
 
       const replaceRange = editorProps.selectedText ? editorProps.selection : editorProps.fullFile;
-      writeFile(editorProps.editor, replaceRange, sortedJson, endDelimiter);
+
+      editorProps.editor.edit((editBuilder) => {
+        editBuilder.replace(replaceRange, stringify(sortedJson, null, editorProps.editor.options.tabSize || "\t") + endDelimiter);
+        vscode.window.showInformationMessage('Sorted Successfully');
+      });
+
     } catch (err: any) {
       vscode.window.showErrorMessage(`Unable to Sort. ${err.message}`);
     }
@@ -156,6 +161,7 @@ export default class SortJSON {
 
     result = this.#getSortedValues(result, Settings.listSortType);
     result = this.isDescending ? result.reverse() : result; // Sort descending
+    copySymbolsToObj(data, result);
     return result;
   };
 
@@ -166,16 +172,29 @@ export default class SortJSON {
     path: string
   ) {
     const orderedKeys = this.#getOrderedKeys(data);
-    const overriddenKeys = [...new Set([...Settings.orderOverrideKeys, ...orderedKeys])]; //  Get Unique Keys
+
+    const orderOverrideKeys: any[] = Settings.orderOverrideKeys || [];
+    const keysWithoutOverriddenKeys = orderedKeys.filter((key) => !Settings.orderOverrideKeys.includes(key));
+    
+    // Replace remaining keys in place of (...) in orderOverrideKeys
+    const spreadIndex = orderOverrideKeys.indexOf("...");
+    if (spreadIndex > -1) {
+      orderOverrideKeys.splice(spreadIndex, 1, ...keysWithoutOverriddenKeys);
+    } else {
+      orderOverrideKeys.push(...keysWithoutOverriddenKeys);
+    }
+
+    const overriddenKeys = [...new Set(orderOverrideKeys)]; //  Get Unique Keys
     const sortedKeys = this.isDescending ? overriddenKeys.reverse() : overriddenKeys; // Sort keys descending
 
     const result = sortedKeys.reduce((res, key) => {
-      // set key in square brackets if it contains any special charectors. 
+      // set key in square brackets if it contains any special characters. 
       // ex : "foobar" -> path.foobar, "foo_bar" -> path.foo_bar, "foo-bar" -> path["foo-bar"], "foo bar" -> path["foo bar"]
       const nestedPath = (/\W/).test(key) ? `${path}.${key}` : `${path}["${key}"]`;
       return { ...res, [key]: this.#getSortedJson(data[key], level - 1, path ? nestedPath : key) };
     }, {});
 
+    copySymbolsToObj(data, result);
     return result;
   };
 

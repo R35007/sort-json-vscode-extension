@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "13.1.1",
+	"version": "13.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -204,7 +204,7 @@
 						"type": "string"
 					},
 					"additionalItems": true,
-					"description": "Keys to override the sort order (i.e. to be at the start of the order)"
+					"description": "Keys to override the sort order.\nGive spread ('...') to place the remaining object keys in order. For example: [ \"id\", \"...\", \"body\" ]\nIf spread is not given then the remaining keys will be appended to the last of override keys"
 				},
 				"sort-json.settings.excludePaths": {
 					"order": 8,
@@ -433,6 +433,7 @@
 	},
 	"dependencies": {
 		"comment-json": "^4.2.3",
+		"json5": "^2.2.2",
 		"lodash": "^4.17.21"
 	}
 }

@@ -1,6 +1,7 @@
-import * as vscode from 'vscode';
+import * as jsonc from 'comment-json';
+import json5 from 'json5';
 import * as _ from 'lodash';
-import * as cjson from 'comment-json';
+import * as vscode from 'vscode';
 import sampleComparisons from "./sampleComparisons";
 import { Settings } from './Settings';
 
@@ -23,32 +24,28 @@ export const getEditorProps = () => {
 export const getData = (editorProps: ReturnType<typeof getEditorProps>) => {
   if (!editorProps) return {};
 
+  let endDelimiter = "";
+  let dataText = editorProps.selectedText || editorProps.editorText;
+
+  // remove , or ; at the end of the string and set it to the delimiter
+  if (dataText.endsWith(";") || dataText.endsWith(",")) {
+    endDelimiter = dataText.endsWith(";") ? ";" : ",";
+    dataText = dataText.substring(0, dataText.length - 1);
+  };
+
   try {
-    let endDelimiter = "";
-    let dataText = editorProps.selectedText || editorProps.editorText;
-    if (dataText.endsWith(";") || dataText.endsWith(",")) {
-      endDelimiter = dataText.endsWith(";") ? ";" : ",";
-      dataText = dataText.substring(0, dataText.length - 1);
-    };
-    const data = cjson.parse(dataText, undefined, true) as object | any[];
-    return { data, endDelimiter };
-  } catch (error: any) {
-    vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
-    return {};
+    const data = jsonc.parse(dataText) as object | any[];
+    return { data, endDelimiter, stringify: jsonc.stringify };
+  } catch (err) {
+    try {
+      // If parsing json with comment-json doesn't work the try with json5 parsing
+      const data = json5.parse(dataText) as object | any[];
+      return { data, endDelimiter, stringify: json5.stringify };
+    } catch (error: any) {
+      vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
+      return {};
+    }
   }
-};
-
-
-export const writeFile = (
-  editor: vscode.TextEditor,
-  replaceRange: vscode.Range | vscode.Selection,
-  data: object = {},
-  endDelimiter: string = ''
-) => {
-  editor.edit((editBuilder) => {
-    editBuilder.replace(replaceRange, cjson.stringify(data, null, editor.options.tabSize) + endDelimiter);
-    vscode.window.showInformationMessage('Sorted Successfully');
-  });
 };
 
 export const getKeysToSort = async (keys: string[]) => {
@@ -184,3 +181,12 @@ export const customObjectComparison = ([key1, val1]: any[] = [], [key2, val2]: a
   };
   return Function(...Object.keys(obj), `return ${comparisonString}`)(...Object.values(obj));
 };
+
+// Copy commented code to the sorted json object | any[]
+export const copySymbolsToObj = (src: object | any[], dest: object | any[]) => {
+  const srcSymbols = Object.getOwnPropertySymbols(src);
+  for (let srcSymbol of srcSymbols) {
+    dest[srcSymbol] = src[srcSymbol];
+  }
+};
+
