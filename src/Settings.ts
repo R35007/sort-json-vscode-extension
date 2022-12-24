@@ -48,6 +48,10 @@ export class Settings {
     Settings.setSettings('isCaseSensitive', value);
   }
 
+  static get preserveUnicodeString() {
+    return Settings.getSettings('preserveUnicodeString') as string;
+  }
+
   static get orderOverrideKeys() {
     return (Settings.getSettings('orderOverrideKeys') as string[]) || [];
   }

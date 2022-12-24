@@ -94,7 +94,7 @@ export default class SortJSON {
     try {
       const editorProps = getEditorProps();
 
-      const { data, endDelimiter, stringify = JSON.stringify } = getData(editorProps);
+      const { data, endDelimiter, stringify = JSON.stringify, uniqueCode } = getData(editorProps);
 
       if (!editorProps || !data) return; // return if no data to sort
 
@@ -124,7 +124,14 @@ export default class SortJSON {
       const replaceRange = editorProps.selectedText ? editorProps.selection : editorProps.fullFile;
 
       editorProps.editor.edit((editBuilder) => {
-        editBuilder.replace(replaceRange, stringify(sortedJson, null, editorProps.editor.options.tabSize || "\t") + endDelimiter);
+
+        let sortedStr = stringify(sortedJson, null, editorProps.editor.options.tabSize || "\t") + endDelimiter;
+        
+        // Replace all uniqueCode with "\\u".
+        if (Settings.preserveUnicodeString) {
+          sortedStr = sortedStr.replace(new RegExp(`\\${uniqueCode}`, "gi"), "\\u"); // replace unicode string
+        }
+        editBuilder.replace(replaceRange, sortedStr);
         vscode.window.showInformationMessage('Sorted Successfully');
       });
 
@@ -175,7 +182,7 @@ export default class SortJSON {
 
     const orderOverrideKeys: any[] = Settings.orderOverrideKeys || [];
     const keysWithoutOverriddenKeys = orderedKeys.filter((key) => !Settings.orderOverrideKeys.includes(key));
-    
+
     // Replace remaining keys in place of (...) in orderOverrideKeys
     const spreadIndex = orderOverrideKeys.indexOf("...");
     if (spreadIndex > -1) {

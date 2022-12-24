@@ -4,6 +4,8 @@ import * as _ from 'lodash';
 import * as vscode from 'vscode';
 import sampleComparisons from "./sampleComparisons";
 import { Settings } from './Settings';
+import { customAlphabet } from 'nanoid';
+const nanoid = customAlphabet('1234567890abcdef', 5);
 
 export const getEditorProps = () => {
   const editor = vscode.window.activeTextEditor;
@@ -33,17 +35,29 @@ export const getData = (editorProps: ReturnType<typeof getEditorProps>) => {
     dataText = dataText.substring(0, dataText.length - 1);
   };
 
+  const uniqueCode = "\\fu" + nanoid();
+  // Escape all unicode sequence string. "\\u21D3" to "\\fu21D3"
+  if (Settings.preserveUnicodeString) {
+    dataText = dataText.replace(/\\u/gi, uniqueCode);
+  }
+
   try {
-    const data = jsonc.parse(dataText) as object | any[];
-    return { data, endDelimiter, stringify: jsonc.stringify };
+    const data = JSON.parse(dataText) as object | any[];
+    return { data, endDelimiter, stringify: JSON.stringify, uniqueCode };
   } catch (err) {
     try {
       // If parsing json with comment-json doesn't work the try with json5 parsing
-      const data = json5.parse(dataText) as object | any[];
-      return { data, endDelimiter, stringify: json5.stringify };
+      const data = jsonc.parse(dataText) as object | any[];
+      return { data, endDelimiter, stringify: jsonc.stringify, uniqueCode };
     } catch (error: any) {
-      vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
-      return {};
+      try {
+        // If parsing json with comment-json doesn't work the try with json5 parsing
+        const data = json5.parse(dataText) as object | any[];
+        return { data, endDelimiter, stringify: json5.stringify, uniqueCode };
+      } catch (error: any) {
+        vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
+        return {};
+      }
     }
   }
 };

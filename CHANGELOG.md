@@ -1,5 +1,11 @@
 # Change Log
 
+## v15.0.0
+
+- Added - `sort-json.settings.preserveUnicodeString` - Helps to preserver unicode sequence string.
+  - For example:  unicode string: `\u21D3` will not be converted to (`↧`) character on sorting.
+  - This is unstable and may not fully compatible with all unicode's. Please use this with caution.
+  
 ## v14.0.0
 
 - Support for Sort JSON with comments. 

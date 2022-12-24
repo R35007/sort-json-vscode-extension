@@ -196,6 +196,12 @@
 					"default": false,
 					"description": "Set to true to compare with case sensitive in sorting"
 				},
+				"sort-json.settings.preserveUnicodeString": {
+					"order": 6,
+					"type": "boolean",
+					"default": false,
+					"description": "Set to true to preserve unicode string in sorting. This is unstable. Please use it with caution."
+				},
 				"sort-json.settings.orderOverrideKeys": {
 					"order": 7,
 					"type": "array",
@@ -434,6 +440,7 @@
 	"dependencies": {
 		"comment-json": "^4.2.3",
 		"json5": "^2.2.2",
-		"lodash": "^4.17.21"
+		"lodash": "^4.17.21",
+		"nanoid": "^4.0.0"
 	}
 }
