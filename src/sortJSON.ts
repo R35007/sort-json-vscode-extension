@@ -184,7 +184,7 @@ export default class SortJSON {
     const orderedKeys = this.#getOrderedKeys(data);
 
     const orderOverrideKeys: string[] = _.isPlainObject(Settings.orderOverrideKeys) 
-    ? Settings.orderOverrideKeys[this.fileName] || [] : 
+    ? Settings.orderOverrideKeys[this.fileName] || Settings.orderOverrideKeys[""] || [] : 
     Settings.orderOverrideKeys || [];
     const keysWithoutOverriddenKeys = orderedKeys.filter((key) => !orderOverrideKeys.includes(key));
 

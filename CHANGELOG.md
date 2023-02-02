@@ -1,5 +1,9 @@
 # Change Log
 
+## v17.0.1
+
+- Sort override issue fix.
+
 ## v17.0.0
 
 - Updated - `sort-json.settings.orderOverrideKeys` - Now we can give both array of keys or an object with filename that has array of keys to set order override keys for a specific filename.
