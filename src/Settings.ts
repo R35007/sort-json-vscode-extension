@@ -72,4 +72,8 @@ export class Settings {
   static get contextMenu() {
     return (Settings.getSettings('contextMenu') as object) || {};
   }
+
+  static get showInfoMsg() {
+    return Settings.getSettings('showInfoMsg') as boolean;
+  }
 }

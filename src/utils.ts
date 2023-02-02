@@ -27,11 +27,11 @@ export const getData = (editorProps: ReturnType<typeof getEditorProps>) => {
   if (!editorProps) return {};
 
   let endDelimiter = "";
-  let dataText = editorProps.selectedText || editorProps.editorText;
+  let dataText = editorProps.selectedText.trim() || editorProps.editorText;
 
   // remove , or ; at the end of the string and set it to the delimiter
-  if (dataText.endsWith(";") || dataText.endsWith(",")) {
-    endDelimiter = dataText.endsWith(";") ? ";" : ",";
+  if (dataText.endsWith(";") || dataText.endsWith(",") || dataText.endsWith("\n")) {
+    endDelimiter = dataText.endsWith(";") ? ";" : dataText.endsWith(",") ? "," : "\n";
     dataText = dataText.substring(0, dataText.length - 1);
   };
 

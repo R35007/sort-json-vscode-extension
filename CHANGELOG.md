@@ -1,5 +1,10 @@
 # Change Log
 
+## v16.0.0
+
+- Added - `sort-json.settings.showInfoMsg` in settings. Set to false to disable Sort Successfully info popup.
+- Modified - Now we preserve trailing newline on sorting.
+
 ## v15.0.0
 
 - Added - `sort-json.settings.preserveUnicodeString` - Helps to preserver unicode sequence string.

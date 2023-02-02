@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "15.0.0",
+	"version": "16.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -305,6 +305,12 @@
 						"isCaseSensitive": false
 					},
 					"description": "Show or Hide Sort JSON context menus"
+				},
+				"sort-json.settings.showInfoMsg": {
+					"order": 11,
+					"type": "boolean",
+					"default": true,
+					"description": "Set to false if you don't want to show Information message."
 				}
 			}
 		},

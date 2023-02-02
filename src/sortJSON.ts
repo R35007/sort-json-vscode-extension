@@ -132,7 +132,7 @@ export default class SortJSON {
           sortedStr = sortedStr.replace(new RegExp(`\\${uniqueCode}`, "gi"), "\\u"); // replace unicode string
         }
         editBuilder.replace(replaceRange, sortedStr);
-        vscode.window.showInformationMessage('Sorted Successfully');
+        Settings.showInfoMsg && vscode.window.showInformationMessage('Sorted Successfully');
       });
 
     } catch (err: any) {
