@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as vscode from 'vscode';
+import * as path from "path";
 import { ListsSortTypes, ObjectsSortTypes, SortModes } from './enum';
 import { Settings } from './Settings';
 import { copySymbolsToObj, customListComparison, customObjectComparison, getCustomComparison, getData, getEditorProps, getKeysToSort } from './utils';
@@ -10,6 +11,7 @@ export default class SortJSON {
   isCustomSort = false;
   customComparison;
   keysToSort: string[] = [];
+  fileName: string = "";
 
   // Set Sort Level
   async setSortLevel() {
@@ -100,6 +102,7 @@ export default class SortJSON {
 
       this.isDescending = isDescending;
       this.isCustomSort = isCustomSort;
+      this.fileName = path.basename(editorProps.document.fileName);
 
       // Get custom comparison string.
       if (this.isCustomSort) {
@@ -126,7 +129,7 @@ export default class SortJSON {
       editorProps.editor.edit((editBuilder) => {
 
         let sortedStr = stringify(sortedJson, null, editorProps.editor.options.tabSize || "\t") + endDelimiter;
-        
+
         // Replace all uniqueCode with "\\u".
         if (Settings.preserveUnicodeString) {
           sortedStr = sortedStr.replace(new RegExp(`\\${uniqueCode}`, "gi"), "\\u"); // replace unicode string
@@ -180,8 +183,10 @@ export default class SortJSON {
   ) {
     const orderedKeys = this.#getOrderedKeys(data);
 
-    const orderOverrideKeys: any[] = Settings.orderOverrideKeys || [];
-    const keysWithoutOverriddenKeys = orderedKeys.filter((key) => !Settings.orderOverrideKeys.includes(key));
+    const orderOverrideKeys: string[] = _.isPlainObject(Settings.orderOverrideKeys) 
+    ? Settings.orderOverrideKeys[this.fileName] || [] : 
+    Settings.orderOverrideKeys || [];
+    const keysWithoutOverriddenKeys = orderedKeys.filter((key) => !orderOverrideKeys.includes(key));
 
     // Replace remaining keys in place of (...) in orderOverrideKeys
     const spreadIndex = orderOverrideKeys.indexOf("...");

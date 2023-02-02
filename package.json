@@ -2,7 +2,7 @@
 	"name": "sort-json",
 	"displayName": "Sort JSON",
 	"description": "Simple JSON Object and Array sort",
-	"version": "16.0.0",
+	"version": "17.0.0",
 	"publisher": "Thinker",
 	"license": "MIT",
 	"icon": "images/sort-json-logo.png",
@@ -204,11 +204,25 @@
 				},
 				"sort-json.settings.orderOverrideKeys": {
 					"order": 7,
-					"type": "array",
+					"oneOf": [
+						{
+							"type": "array",
+							"additionalItems": true,
+							"items": {
+								"type": "string"
+							}
+						},
+						{
+							"type": "object",
+							"additionalProperties": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						}
+					],
 					"default": [],
-					"items": {
-						"type": "string"
-					},
 					"additionalItems": true,
 					"description": "Keys to override the sort order.\nGive spread ('...') to place the remaining object keys in order. For example: [ \"id\", \"...\", \"body\" ]\nIf spread is not given then the remaining keys will be appended to the last of override keys"
 				},

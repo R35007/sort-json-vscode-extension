@@ -1,5 +1,24 @@
 # Change Log
 
+## v17.0.0
+
+- Updated - `sort-json.settings.orderOverrideKeys` - Now we can give both array of keys or an object with filename that has array of keys to set order override keys for a specific filename.
+   - Example 1: 
+   ```jsonc
+   {
+    "sort-json.settings.orderOverrideKeys": {
+      "package.json": ["name", "version"], // order override keys specific to package.json file
+      "": ["id", "title"], // order override keys for all files
+    }
+   }
+   ```
+   - Example 2:
+   ```jsonc
+   {
+    "sort-json.settings.orderOverrideKeys": ["id", "title"], // order override keys for all files
+   }
+   ```
+
 ## v16.0.0
 
 - Added - `sort-json.settings.showInfoMsg` in settings. Set to false to disable Sort Successfully info popup.

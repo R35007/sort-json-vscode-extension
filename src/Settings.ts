@@ -53,7 +53,7 @@ export class Settings {
   }
 
   static get orderOverrideKeys() {
-    return (Settings.getSettings('orderOverrideKeys') as string[]) || [];
+    return (Settings.getSettings('orderOverrideKeys') as string[] | { [key: string]: string[] }) || [];
   }
   static get excludePaths() {
     return (Settings.getSettings('excludePaths') as string[]) || [];
