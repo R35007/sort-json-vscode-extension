@@ -1,5 +1,9 @@
 # Change Log
 
+## v17.0.2
+
+- Sorts again even if its already sorted and rewrites the same issue fixed.
+
 ## v17.0.1
 
 - Sort override issue fix.
