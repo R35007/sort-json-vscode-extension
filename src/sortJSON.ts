@@ -134,7 +134,7 @@ export default class SortJSON {
       const isCollection = _.isArray(data) && data.every(_.isPlainObject); // Check is every item in an array is a object
       if (!this.isCustomSort && Settings.listSortType !== ListsSortTypes.valueLength && isCollection) {
         const keys = (data as any[]).reduce((keys, item) => keys.concat(Object.keys(item)), []);
-        const keysToSort = await getKeysToSort(["Preserver Order", ...new Set(keys)] as string[]);
+        const keysToSort = await getKeysToSort(["Preserve Order", ...new Set(keys)] as string[]);
         if (!keysToSort || !keysToSort.length) return;
         this.keysToSort = keysToSort;
       }
