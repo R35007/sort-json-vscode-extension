@@ -1,5 +1,10 @@
 # Change Log
 
+## v17.0.3
+
+- Fixed - Nested sorting is not happening if no key is selected for the array of object sorting.
+  On sorting collection (Array of object) select the key `Preserve Order` to preserve the order of the array but still sort the nested object based on the sort level.
+
 ## v17.0.2
 
 - Sorts again even if its already sorted and rewrites the same issue fixed.
@@ -11,21 +16,21 @@
 ## v17.0.0
 
 - Updated - `sort-json.settings.orderOverrideKeys` - Now we can give both array of keys or an object with filename that has array of keys to set order override keys for a specific filename.
-   - Example 1: 
-   ```jsonc
-   {
+  - Example 1:
+  ```jsonc
+  {
     "sort-json.settings.orderOverrideKeys": {
       "package.json": ["name", "version"], // order override keys specific to package.json file
-      "": ["id", "title"], // order override keys for all files
+      "": ["id", "title"] // order override keys for all files
     }
-   }
-   ```
-   - Example 2:
-   ```jsonc
-   {
-    "sort-json.settings.orderOverrideKeys": ["id", "title"], // order override keys for all files
-   }
-   ```
+  }
+  ```
+  - Example 2:
+  ```jsonc
+  {
+    "sort-json.settings.orderOverrideKeys": ["id", "title"] // order override keys for all files
+  }
+  ```
 
 ## v16.0.0
 
@@ -35,15 +40,15 @@
 ## v15.0.0
 
 - Added - `sort-json.settings.preserveUnicodeString` - Helps to preserver unicode sequence string.
-  - For example:  unicode string: `\u21D3` will not be converted to (`↧`) character on sorting.
+  - For example: unicode string: `\u21D3` will not be converted to (`↧`) character on sorting.
   - This is unstable and may not fully compatible with all unicode's. Please use this with caution.
-  
+
 ## v14.0.0
 
-- Support for Sort JSON with comments. 
-- Support for Sort JSON with ES6 standards ( allows single quotes and keys with no quotes ). 
+- Support for Sort JSON with comments.
+- Support for Sort JSON with ES6 standards ( allows single quotes and keys with no quotes ).
 - Added - `...` spread operator to spread remaining keys in middle of overridden keys.
-  - For Example:  `sort-json.settings.orderOverrideKeys`: [ "id", "...", "body" ]
+  - For Example: `sort-json.settings.orderOverrideKeys`: [ "id", "...", "body" ]
   - Here, `...` values will be replaced by the remaining object ordered keys.
 
 ## v13.1.1
@@ -73,23 +78,23 @@
 - Custom sort can also sort into multiple nested levels.
 - `Deep Sort`, `Deep Reverse Sort` has been removed. Change the level of sort to sort nested objects.
 - Can set different sort types of both `List` and `Object` sort.
-- `Sort Level` - Set sort level to `-1` to a full deep sort. Set sort level to `1` to sort only at the top level. 
+- `Sort Level` - Set sort level to `-1` to a full deep sort. Set sort level to `1` to sort only at the top level.
 - Set sort level to `0` to avoid sorting. Default Sort Level is `-1`.
-  
+
 ## v11.0.0
 
 - Build size reduced using webpack build.
 - Sort by key length issue fixed
-  
+
 ## v10.0.0
 
 - Removed unused configurations.
-  
+
 ## v9.1.0
 
 - Build size reduced
 - Bug fixes
-  
+
 ## v9.0.0
 
 - Added - `Custom Comparison Sort` - Provide your own custom comparison code to sort any data. Limited to only top level sort and not deep sort.
@@ -97,8 +102,8 @@
 
 ## v8.1.0
 
- - Reduced build size
- - Added editor context sub menus. Now all sort json commands comes under a `Sort JSON` sub menu.
+- Reduced build size
+- Added editor context sub menus. Now all sort json commands comes under a `Sort JSON` sub menu.
 
 ## v8.0.0
 

@@ -1,8 +1,8 @@
 import * as _ from "lodash";
-import * as vscode from "vscode";
 import * as path from "path";
-import { ListsSortTypes, ObjectsSortTypes, SortModes } from "./enum";
+import * as vscode from "vscode";
 import { Settings } from "./Settings";
+import { ListsSortTypes, ObjectsSortTypes, SortModes } from "./enum";
 import {
   copySymbolsToObj,
   customListComparison,
@@ -134,7 +134,7 @@ export default class SortJSON {
       const isCollection = _.isArray(data) && data.every(_.isPlainObject); // Check is every item in an array is a object
       if (!this.isCustomSort && Settings.listSortType !== ListsSortTypes.valueLength && isCollection) {
         const keys = (data as any[]).reduce((keys, item) => keys.concat(Object.keys(item)), []);
-        const keysToSort = await getKeysToSort([...new Set(keys)] as string[]);
+        const keysToSort = await getKeysToSort(["Preserver Order", ...new Set(keys)] as string[]);
         if (!keysToSort || !keysToSort.length) return;
         this.keysToSort = keysToSort;
       }
