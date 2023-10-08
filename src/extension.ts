@@ -1,8 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { Commands } from './enum';
 import { Settings } from './Settings';
+import { Commands } from './enum';
 import SortJSON from './sortJSON';
 
 // this method is called when your extension is activated
@@ -15,10 +15,12 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand(Commands.ascendingSort, () => sortJSON.sort()));
   // Sort Descending
   context.subscriptions.push(vscode.commands.registerCommand(Commands.descendingSort, () => sortJSON.sort(true)));
-  // Set Default Custom Sort
-  context.subscriptions.push(vscode.commands.registerCommand(Commands.setDefaultCustomSort, () => sortJSON.setDefaultCustomSort()));
+  // Sort Randomize
+  context.subscriptions.push(vscode.commands.registerCommand(Commands.randomizeSort, () => sortJSON.sort(false, false, true)));
   // Do Custom Sort
   context.subscriptions.push(vscode.commands.registerCommand(Commands.customSort, () => sortJSON.sort(false, true)));
+  // Set Default Custom Sort
+  context.subscriptions.push(vscode.commands.registerCommand(Commands.setDefaultCustomSort, () => sortJSON.setDefaultCustomSort()));
   // Set Sort Level
   context.subscriptions.push(vscode.commands.registerCommand(Commands.setSortLevel, () => sortJSON.setSortLevel()));
   // Set Object Sort Type

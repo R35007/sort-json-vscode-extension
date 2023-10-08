@@ -2,7 +2,7 @@
   "name": "sort-json",
   "displayName": "Sort JSON",
   "description": "Simple JSON Object and Array sort",
-  "version": "17.0.3",
+  "version": "18.0.3",
   "publisher": "Thinker",
   "license": "MIT",
   "icon": "images/sort-json-logo.png",
@@ -35,16 +35,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:sort-json.ascendingSort",
-    "onCommand:sort-json.descendingSort",
-    "onCommand:sort-json.setDefaultCustomSort",
-    "onCommand:sort-json.customSort",
-    "onCommand:sort-json.setSortLevel",
-    "onCommand:sort-json.setObjectSortType",
-    "onCommand:sort-json.setListSortType",
-    "onCommand:sort-json.toggleCaseSensitive",
-    "onCommand:sort-json.setCaseSensitive",
-    "onCommand:sort-json.setCaseInSensitive"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -57,6 +48,11 @@
       {
         "command": "sort-json.descendingSort",
         "title": "Sort Descending",
+        "category": "Sort JSON"
+      },
+      {
+        "command": "sort-json.randomizeSort",
+        "title": "Sort Randomize",
         "category": "Sort JSON"
       },
       {
@@ -292,6 +288,9 @@
             "descendingSort": {
               "type": "boolean"
             },
+            "randomizeSort": {
+              "type": "boolean"
+            },
             "customSort": {
               "type": "boolean"
             },
@@ -356,34 +355,39 @@
           "group": "thinker.sort-json@2"
         },
         {
+          "when": "config.sort-json.settings.randomizeSort",
+          "command": "sort-json.randomizeSort",
+          "group": "thinker.sort-json@3"
+        },
+        {
           "when": "config.sort-json.settings.contextMenu.customSort",
           "command": "sort-json.customSort",
-          "group": "thinker.sort-json@3"
+          "group": "thinker.sort-json@4"
         },
         {
           "when": "config.sort-json.settings.contextMenu.setSortLevel",
           "command": "sort-json.setSortLevel",
-          "group": "thinker.sort-json@4"
+          "group": "thinker.sort-json@5"
         },
         {
           "when": "config.sort-json.settings.contextMenu.setObjectSortType",
           "command": "sort-json.setObjectSortType",
-          "group": "thinker.sort-json@5"
+          "group": "thinker.sort-json@6"
         },
         {
           "when": "config.sort-json.settings.contextMenu.setListSortType",
           "command": "sort-json.setListSortType",
-          "group": "thinker.sort-json@6"
+          "group": "thinker.sort-json@7"
         },
         {
           "when": "config.sort-json.settings.contextMenu.isCaseSensitive && !config.sort-json.settings.isCaseSensitive",
           "command": "sort-json.setCaseSensitive",
-          "group": "thinker.sort-json@7"
+          "group": "thinker.sort-json@8"
         },
         {
           "when": "config.sort-json.settings.contextMenu.isCaseSensitive && config.sort-json.settings.isCaseSensitive",
           "command": "sort-json.setCaseInSensitive",
-          "group": "thinker.sort-json@7"
+          "group": "thinker.sort-json@9"
         }
       ],
       "sort-json.subMenu": [
@@ -398,34 +402,39 @@
           "group": "thinker.sort-json@2"
         },
         {
+          "when": "!config.sort-json.settings.contextMenu.randomizeSort",
+          "command": "sort-json.randomizeSort",
+          "group": "thinker.sort-json@3"
+        },
+        {
           "when": "!config.sort-json.settings.contextMenu.customSort",
           "command": "sort-json.customSort",
-          "group": "thinker.sort-json@3"
+          "group": "thinker.sort-json@4"
         },
         {
           "when": "!config.sort-json.settings.contextMenu.setSortLevel",
           "command": "sort-json.setSortLevel",
-          "group": "thinker.sort-json@4"
+          "group": "thinker.sort-json@5"
         },
         {
           "when": "!config.sort-json.settings.contextMenu.setObjectSortType",
           "command": "sort-json.setObjectSortType",
-          "group": "thinker.sort-json@5"
+          "group": "thinker.sort-json@6"
         },
         {
           "when": "!config.sort-json.settings.contextMenu.setListSortType",
           "command": "sort-json.setListSortType",
-          "group": "thinker.sort-json@6"
+          "group": "thinker.sort-json@7"
         },
         {
           "when": "!config.sort-json.settings.contextMenu.isCaseSensitive && !config.sort-json.settings.isCaseSensitive",
           "command": "sort-json.setCaseSensitive",
-          "group": "thinker.sort-json@7"
+          "group": "thinker.sort-json@8"
         },
         {
           "when": "!config.sort-json.settings.contextMenu.isCaseSensitive && config.sort-json.settings.isCaseSensitive",
           "command": "sort-json.setCaseInSensitive",
-          "group": "thinker.sort-json@7"
+          "group": "thinker.sort-json@9"
         }
       ]
     },

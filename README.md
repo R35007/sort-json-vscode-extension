@@ -6,9 +6,10 @@ Simple JSON Object and Array sort.
 
 ## Features
 
-- Sort JSON that contains comments.
+- Sort JSON with comments.
 - Sort Ascending
 - Sort Descending
+- Sort Randomize
 - Sort By Value
 - Sort By Key
 - Sort By Value Length
@@ -32,14 +33,15 @@ Simple JSON Object and Array sort.
 
 ## Custom Sort
 
- - Right click on a file and select `Do Custom Sort` command from `Sort JSON`.
- - A quick pick items shows up where we can provide our own custom logic to sort the data. 
- - We can also save our custom comparisons in settings using `sort-json.settings.customComparisons` vscode settings which will shows up in the quick pick items.
- - Please use conditional operators to sort with multiple conditions.
+- Right click on a file and select `Do Custom Sort` command from `Sort JSON`.
+- A quick pick items shows up where we can provide our own custom logic to sort the data.
+- We can also save our custom comparisons in settings using `sort-json.settings.customComparisons` vscode settings which will shows up in the quick pick items.
+- Please use conditional operators to sort with multiple conditions.
 
 `Sort Array`
+
 - predefined variables
-  - `item1`, `key1`, `val1`, `value1`,  `x` is equal to `a`.
+  - `item1`, `key1`, `val1`, `value1`, `x` is equal to `a`.
   - `item2`, `key2`, `val2`, `value2`, `y` is equal to `b`.
   - `_`, `lodash`, `dash` - Lodash is exposed.
 - Checks
@@ -50,6 +52,7 @@ Simple JSON Object and Array sort.
   - `isAllList` - returns `true` if all the items in a list are list
   - `isAllObject`, `isCollection` - returns `true` if all the items in a list are objects
 - examples:
+
   ```jsonc
   // sort ascending
   [ 9,2,6,5,4,1,3,0,7 ]
@@ -76,8 +79,9 @@ Simple JSON Object and Array sort.
   // comparison code = a.name == b.name ? 0 : a.name > b.name ? 1 : -1
   // sort to  [ { "id": 1, "name": "foo" }, { "id": 2, "name": "bar" } ]
   ```
-  
+
 `Sort Object`
+
 - predefined variables
   - `key1` - Object first key
   - `key2` - Object second key
@@ -89,6 +93,7 @@ Simple JSON Object and Array sort.
   - `b`, `y` is equal to `item2`
   - `_`, `lodash`, `dash` - Lodash is exposed.
 - Checks
+
   - `isArray`, `isList` will be `false` in object sort order
   - `isObject` will be `true` in object sort order
   - `isAllNumber` - returns `true` if all the values in a object are numbers
@@ -97,6 +102,7 @@ Simple JSON Object and Array sort.
   - `isAllObject`, `isCollection` - returns `true` if all the values in a list are objects
 
 - examples:
+
   ```jsonc
   // sort by key length
   { "name": "first item", "id": 1, "label": "foo" }

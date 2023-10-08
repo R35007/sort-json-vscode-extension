@@ -1,4 +1,5 @@
 export enum ComparisonTypes {
+  randomize = "randomize the items",
   numberAscending = "sort list by number in ascending order",
   numberDescending = "sort list by number in descending order",
   stringAscending = "sort list by string in ascending order",
@@ -30,4 +31,5 @@ export default {
   [ComparisonTypes.valueDescending]: "isObject && isAllString ? val1 === val2 ? 0 : val1 < val2 ? 1 : -1 : true",
   [ComparisonTypes.collectionAscendingByID]: "isList && isCollection ? item1.id - item2.id : true",
   [ComparisonTypes.collectionDescendingByID]: "isList && isCollection ? item2.id - item1.id : true",
+  [ComparisonTypes.randomize]: "Math.random() - 0.5",
 };

@@ -1,5 +1,9 @@
 # Change Log
 
+## v18.0.0
+
+- Added - `Sort Randomize` - Randomly sort the array or object.
+
 ## v17.0.3
 
 - Fixed - Nested sorting is not happening if no key is selected for the array of object sorting.

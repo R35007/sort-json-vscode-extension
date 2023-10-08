@@ -1,4 +1,5 @@
 export enum Commands {
+  randomizeSort = 'sort-json.randomizeSort',
   ascendingSort = 'sort-json.ascendingSort',
   descendingSort = 'sort-json.descendingSort',
   setDefaultCustomSort = 'sort-json.setDefaultCustomSort',

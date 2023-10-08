@@ -3,6 +3,7 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { Settings } from "./Settings";
 import { ListsSortTypes, ObjectsSortTypes, SortModes } from "./enum";
+import Comparisons, { ComparisonTypes } from './sampleComparisons';
 import {
   copySymbolsToObj,
   customListComparison,
@@ -109,7 +110,7 @@ export default class SortJSON {
     vscode.window.showInformationMessage(`Sort is now : ${isCaseSensitive ? "Case-Sensitive" : "Case-InSensitive"}`);
   }
 
-  async sort(isDescending = false, isCustomSort = false) {
+  async sort(isDescending = false, isCustomSort = false, isRandomizeSort = false) {
     try {
       const editorProps = getEditorProps();
 
@@ -118,16 +119,20 @@ export default class SortJSON {
       if (!editorProps || !data) return; // return if no data to sort
 
       this.isDescending = isDescending;
-      this.isCustomSort = isCustomSort;
+      this.isCustomSort = isCustomSort || isRandomizeSort;
       this.fileName = path.basename(editorProps.document.fileName);
 
       // Get custom comparison string.
       if (this.isCustomSort) {
-        const customComparison = Settings.defaultCustomSort?.length
-          ? { label: Settings.defaultCustomSort, description: "Default custom sort" }
-          : await getCustomComparison(this.customComparison);
-        if (!customComparison) return; // return if no custom comparison is selected
-        this.customComparison = customComparison; // set custom comparison only if custom comparison is selected
+        if (isRandomizeSort) {
+          this.customComparison = { label: Comparisons[ComparisonTypes.randomize], description: ComparisonTypes.randomize, value: Comparisons[ComparisonTypes.randomize] };
+        } else {
+          const customComparison = Settings.defaultCustomSort?.length
+            ? { label: Settings.defaultCustomSort, description: "Default custom sort" }
+            : await getCustomComparison(this.customComparison);
+          if (!customComparison) return; // return if no custom comparison is selected
+          this.customComparison = customComparison; // set custom comparison only if custom comparison is selected
+        }
       }
 
       // Get keys to sort if data is a collection
@@ -207,7 +212,7 @@ export default class SortJSON {
       orderOverrideKeys.push(...keysWithoutOverriddenKeys);
     }
 
-    const overriddenKeys = [...new Set(orderOverrideKeys)]; //  Get Unique Keys
+    const overriddenKeys = [...new Set(orderOverrideKeys)].filter(key => orderedKeys.includes(key)); //  Get Unique Keys
     const sortedKeys = this.isDescending ? overriddenKeys.reverse() : overriddenKeys; // Sort keys descending
 
     const result = sortedKeys.reduce((res, key) => {
