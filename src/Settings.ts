@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import { ListsSortTypes, ObjectsSortTypes, SortModes, ValueTypeOrder } from './enum';
 
@@ -48,12 +50,41 @@ export class Settings {
     Settings.setSettings('isCaseSensitive', value);
   }
 
+  static get promptCollectionKeys() {
+    return Settings.getSettings('promptCollectionKeys') as boolean;
+  }
+  static set promptCollectionKeys(value: boolean) {
+    Settings.setSettings('promptCollectionKeys', value);
+  }
+
   static get preserveUnicodeString() {
     return Settings.getSettings('preserveUnicodeString') as string;
   }
 
-  static get orderOverrideKeys() {
-    return (Settings.getSettings('orderOverrideKeys') as string[] | { [key: string]: string[] }) || [];
+  static get orderOverrideKeys(): string[] {
+    try {
+      const currentFilePath = vscode.window.activeTextEditor?.document.fileName.replace(/\\/g, "/") || " * ";
+      const currentFileName = path.basename(currentFilePath);
+      const orderOverrideKeys = Settings.getSettings('orderOverrideKeys') || [];
+
+      if (_.isPlainObject(orderOverrideKeys)) {
+
+        if (orderOverrideKeys[currentFileName]) return orderOverrideKeys[currentFileName];
+
+        const matchedKey = Object.keys(orderOverrideKeys).find(key => {
+          try {
+            return new RegExp(key).test(currentFilePath) || currentFilePath.includes(key);
+          } catch (error) {
+            return currentFilePath.includes(key);
+          }
+        }) ?? "*";
+        return orderOverrideKeys[matchedKey] || [];
+      }
+
+      return orderOverrideKeys as string[] || [];
+    } catch (err) {
+      return [];
+    }
   }
   static get excludePaths() {
     return (Settings.getSettings('excludePaths') as string[]) || [];

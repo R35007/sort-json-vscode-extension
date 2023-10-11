@@ -1,5 +1,25 @@
 # Change Log
 
+## v19.0.0
+
+- Removed - `Preserver Order` prompt in the Collection. instead don't select any key and click ok on the quick pick to preserver the order.
+- Added - `Sort Ascending` and `Sort Descending` to quick fix.
+- Added - `source.fixAll.sort-json` code action. Set to false to prevent from auto sorting on save. Defaults to true,
+- Enhanced - `sort-json.settings.orderOverrideKeys` now support regex pattern to set a overridden keys for a matching file pattern.
+
+```json
+{
+  "sort-json.settings.orderOverrideKeys": {
+    "assets/data/.*.json": ["id", "name", "username", "email"], // order override keys specific to json files inside assets folder
+    "package.json": ["name", "version"], // order override keys specific to package.json file
+    "*": ["id", "title"] // order override keys for all files
+  }
+}
+```
+
+- Fixed - Overriding object keys order on custom sorting issue fixed.
+- Modified - Code optimized.
+
 ## v18.0.0
 
 - Added - `Sort Randomize` - Randomly sort the array or object.

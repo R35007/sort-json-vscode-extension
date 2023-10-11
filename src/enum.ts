@@ -8,8 +8,11 @@ export enum Commands {
   setListSortType = 'sort-json.setListSortType',
   setSortLevel = 'sort-json.setSortLevel',
   toggleCaseSensitive = 'sort-json.toggleCaseSensitive',
+  togglePromptCollectionKeys = 'sort-json.togglePromptCollectionKeys',
   setCaseSensitive = 'sort-json.setCaseSensitive',
   setCaseInSensitive = 'sort-json.setCaseInSensitive',
+  promptCollectionKeys = 'sort-json.promptCollectionKeys',
+  doNotPromptCollectionKeys = 'sort-json.doNotPromptCollectionKeys',
 };
 
 export enum SortModes {

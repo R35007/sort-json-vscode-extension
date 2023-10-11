@@ -1,10 +1,9 @@
 import * as jsonc from "comment-json";
 import json5 from "json5";
 import * as _ from "lodash";
-import * as vscode from "vscode";
-import sampleComparisons from "./sampleComparisons";
-import { Settings } from "./Settings";
 import { customAlphabet } from "nanoid";
+import * as vscode from "vscode";
+import { Settings } from "./Settings";
 const nanoid = customAlphabet("1234567890abcdef", 5);
 
 export const getEditorProps = () => {
@@ -23,11 +22,8 @@ export const getEditorProps = () => {
   return;
 };
 
-export const getData = (editorProps: ReturnType<typeof getEditorProps>) => {
-  if (!editorProps) return {};
-
+export const getJSONDetails = (originalData: string, hideError = false) => {
   let endDelimiter = "";
-  const originalData = editorProps.selectedText.trim() || editorProps.editorText;
   let dataText = originalData;
 
   // remove , or ; at the end of the string and set it to the delimiter
@@ -56,43 +52,11 @@ export const getData = (editorProps: ReturnType<typeof getEditorProps>) => {
         const data = json5.parse(dataText) as object | any[];
         return { data, endDelimiter, originalData, stringify: json5.stringify, uniqueCode };
       } catch (error: any) {
-        vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
-        return { originalData };
+        !hideError && vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
+        return;
       }
     }
   }
-};
-
-export const getKeysToSort = async (keys: string[]) => {
-  if (!keys.length) return [];
-
-  const result = await vscode.window.showQuickPick(keys, {
-    canPickMany: true,
-    placeHolder: "Please select any key to sort",
-  });
-
-  return result || [];
-};
-
-export const getCustomComparison = async (selectedItem?: vscode.QuickPickItem) => {
-  const defaultComparisonItems = Object.entries(sampleComparisons).map(([description, comparison]) => ({ description, comparison }));
-  const customComparisons = [...Settings.customSortComparisons, ...defaultComparisonItems];
-  const quickPickItems = customComparisons.map((cc) => ({ label: cc.comparison, description: cc.description, value: cc.comparison }));
-
-  let existingComparison: any = [];
-  if (selectedItem) {
-    const existingItemIndex = quickPickItems.findIndex((item) => item.label === selectedItem.label);
-    if (existingItemIndex > -1) {
-      quickPickItems.splice(existingItemIndex, 1);
-    }
-
-    existingComparison = [
-      { label: "recently used", kind: vscode.QuickPickItemKind.Separator },
-      { label: selectedItem.label, description: selectedItem.description },
-    ];
-  }
-
-  return await comparisonQuickPick([...existingComparison, ...quickPickItems]);
 };
 
 export const comparisonQuickPick = async (customComparisons: vscode.QuickPickItem[] = []) => {
@@ -155,7 +119,7 @@ export const comparisonQuickPick = async (customComparisons: vscode.QuickPickIte
   return pick;
 };
 
-export const customListComparison = (
+export const interpolateList = (
   a: any,
   b: any,
   {
@@ -195,7 +159,7 @@ export const customListComparison = (
   return Function(...Object.keys(obj), `return ${comparisonString}`)(...Object.values(obj));
 };
 
-export const customObjectComparison = (
+export const interpolateEntries = (
   [key1, val1]: any[] = [],
   [key2, val2]: any[] = [],
   {
@@ -237,10 +201,51 @@ export const customObjectComparison = (
   return Function(...Object.keys(obj), `return ${comparisonString}`)(...Object.values(obj));
 };
 
-// Copy commented code to the sorted json object | any[]
+// This Copies the commented code to the sorted json object | any[] and returns the result
 export const copySymbolsToObj = (src: object | any[], dest: object | any[]) => {
   const srcSymbols = Object.getOwnPropertySymbols(src);
   for (let srcSymbol of srcSymbols) {
     dest[srcSymbol] = src[srcSymbol];
   }
+  return dest;
 };
+
+export const getValueTypes = (value: object | any[]) => {
+  const isPlainObject = value && value !== null && !Array.isArray(value) && typeof value === 'object';
+  const isAllNumber = isPlainObject ? Object.entries(value).map(([_key, val]) => parseInt(_.toString(val))).every(_.isInteger) : value.map((val) => parseInt(val)).every(_.isInteger);
+  const isAllString = isPlainObject ? Object.entries(value).map(([_key, val]) => val).every(_.isString) : value.every(_.isString);
+  const isAllObject = isPlainObject ? Object.entries(value).map(([_key, val]) => val).every(_.isPlainObject) : value.every(_.isPlainObject);
+  const isAllList = isPlainObject ? Object.entries(value).map(([_key, val]) => val).every(_.isArray) : value.every(_.isArray);
+  const isCollection = isAllObject;
+
+  return {
+    isAllNumber,
+    isAllString,
+    isAllObject,
+    isAllList,
+    isCollection,
+  };
+};
+
+export const saveSortedJSON = (sortedJson: any, editorProps: ReturnType<typeof getEditorProps>, jsonDetails: ReturnType<typeof getJSONDetails>, isFixAllAction = false) => {
+  if (!editorProps || !jsonDetails) return;
+
+  const replaceRange = editorProps.selectedText ? editorProps.selection : editorProps.fullFile;
+
+  editorProps.editor.edit((editBuilder) => {
+    let sortedStr = jsonDetails.stringify(sortedJson, null, editorProps.editor.options.tabSize || "\t") + jsonDetails.endDelimiter;
+
+    // Replace all uniqueCode with "\\u".
+    if (Settings.preserveUnicodeString) {
+      sortedStr = sortedStr.replace(new RegExp(`\\${jsonDetails.uniqueCode}`, "gi"), "\\u"); // replace unicode string
+    }
+
+    if (jsonDetails.originalData.replace(/\n/g, '').replace(/\s+/g, '') === sortedStr.replace(/\n/g, '').replace(/\s+/g, '')) {
+      !isFixAllAction && Settings.showInfoMsg && vscode.window.showInformationMessage("Already Sorted.");
+    } else {
+      editBuilder.replace(replaceRange, sortedStr);
+      !isFixAllAction && Settings.showInfoMsg && vscode.window.showInformationMessage("Sorted Successfully");
+    }
+  });
+};
+

@@ -19,17 +19,7 @@ Simple JSON Object and Array sort.
 - Sort Object
 - Sort List items
 - Sort Collections
-
-## Usage
-
-- Right click on a file and select `Sort` command to sort the full json file object.
-- Select the json object you need to sort and right click and select `Sort` command to sort the selected json object.
-- Select `Deep Sort` command to sort nested objects including arrays.
-- Sorting collection it will prompt you to pick a attribute to sort.
-- We can set a custom sorting order using `sort-json.settings.orderOverride`
-- Sorting Type : `Key`, `Key Length`, `Value`, `Value Length`, `Value Type`
-- If the Sort type is `Value Type` we can set a custom value type order using `sort-json.settings.sortValueTypeOrder`
-- Custom Comparison Sort shows a quick pick items where we can provide our own custom logic to sort the data.
+- Also supports Quick Fix and Fix All code action
 
 ## Custom Sort
 
@@ -115,4 +105,37 @@ Simple JSON Object and Array sort.
   // sort to  { "id": 1, "label": "foo", "name": "first item" }
   ```
 
+## Sort on save
+
+There's a vscode setting for formatters (settings.json):
+
+````json
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit" // set to true or explicit to sort json files on save
+  }
+```
+
+But you can also selectively enable/disable this formatter with (settings.json):
+
+```jsonc
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.sort-json": "explicit" // set to explicit true to sort json files on save. set to "never" or false to stop sorting on save
+    }
+}
+```
+
+Or use a hotkey, if you prefer (keybindings.json):
+
+```json
+{
+    "key": "cmd+shift+a",
+    "command": "editor.action.codeAction",
+    "args": {
+        "kind": "source.fixAll.sort-json"
+    }
+}
+```
+
 **Enjoy!**
+````

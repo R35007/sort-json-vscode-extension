@@ -2,7 +2,7 @@
   "name": "sort-json",
   "displayName": "Sort JSON",
   "description": "Simple JSON Object and Array sort",
-  "version": "18.0.3",
+  "version": "19.0.0",
   "publisher": "Thinker",
   "license": "MIT",
   "icon": "images/sort-json-logo.png",
@@ -93,6 +93,21 @@
       {
         "command": "sort-json.setCaseInSensitive",
         "title": "✓⠀Case-Sensitive",
+        "category": "Sort JSON"
+      },
+      {
+        "command": "sort-json.togglePromptCollectionKeys",
+        "title": "Toggle Prompt Collection Keys",
+        "category": "Sort JSON"
+      },
+      {
+        "command": "sort-json.promptCollectionKeys",
+        "title": "Prompt Collection Keys",
+        "category": "Sort JSON"
+      },
+      {
+        "command": "sort-json.doNotPromptCollectionKeys",
+        "title": "✓⠀Prompt Collection Keys",
         "category": "Sort JSON"
       }
     ],
@@ -192,14 +207,20 @@
           "default": false,
           "description": "Set to true to compare with case sensitive in sorting"
         },
+        "sort-json.settings.promptCollectionKeys": {
+          "order": 7,
+          "type": "boolean",
+          "default": true,
+          "description": "If false it will not prompt to select keys to sort a collection ( Array of object ). By default it sorts by id."
+        },
         "sort-json.settings.preserveUnicodeString": {
-          "order": 6,
+          "order": 8,
           "type": "boolean",
           "default": false,
           "description": "Set to true to preserve unicode string in sorting. This is unstable. Please use it with caution."
         },
         "sort-json.settings.orderOverrideKeys": {
-          "order": 7,
+          "order": 9,
           "oneOf": [
             {
               "type": "array",
@@ -223,7 +244,7 @@
           "description": "Keys to override the sort order.\nGive spread ('...') to place the remaining object keys in order. For example: [ \"id\", \"...\", \"body\" ]\nIf spread is not given then the remaining keys will be appended to the last of override keys"
         },
         "sort-json.settings.excludePaths": {
-          "order": 8,
+          "order": 10,
           "type": "array",
           "default": [],
           "items": {
@@ -233,7 +254,7 @@
           "description": "Set exclude path for deep sort"
         },
         "sort-json.settings.customSortComparisons": {
-          "order": 9,
+          "order": 11,
           "type": "array",
           "additionalItems": true,
           "default": [],
@@ -268,13 +289,13 @@
           }
         },
         "sort-json.settings.defaultCustomSort": {
-          "order": 9,
+          "order": 12,
           "type": "string",
           "default": "",
           "description": "Provide your default custom sort comparison code. Leave it empty to prompt your custom comparison code each time."
         },
         "sort-json.settings.contextMenu": {
-          "order": 10,
+          "order": 13,
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -305,6 +326,9 @@
             },
             "isCaseSensitive": {
               "type": "boolean"
+            },
+            "promptCollectionKeys": {
+              "type": "boolean"
             }
           },
           "default": {
@@ -315,12 +339,13 @@
             "setSortLevel": false,
             "setObjectSortType": false,
             "setListSortType": false,
-            "isCaseSensitive": false
+            "isCaseSensitive": false,
+            "promptCollectionKeys": false
           },
           "description": "Show or Hide Sort JSON context menus"
         },
         "sort-json.settings.showInfoMsg": {
-          "order": 11,
+          "order": 14,
           "type": "boolean",
           "default": true,
           "description": "Set to false if you don't want to show Information message."
@@ -335,6 +360,14 @@
         },
         {
           "command": "sort-json.setCaseInSensitive",
+          "when": "false"
+        },
+        {
+          "command": "sort-json.promptCollectionKeys",
+          "when": "false"
+        },
+        {
+          "command": "sort-json.doNotPromptCollectionKeys",
           "when": "false"
         }
       ],
@@ -388,6 +421,16 @@
           "when": "config.sort-json.settings.contextMenu.isCaseSensitive && config.sort-json.settings.isCaseSensitive",
           "command": "sort-json.setCaseInSensitive",
           "group": "thinker.sort-json@9"
+        },
+        {
+          "when": "config.sort-json.settings.contextMenu.promptCollectionKeys && !config.sort-json.settings.promptCollectionKeys",
+          "command": "sort-json.promptCollectionKeys",
+          "group": "thinker.sort-json@10"
+        },
+        {
+          "when": "config.sort-json.settings.contextMenu.promptCollectionKeys && config.sort-json.settings.promptCollectionKeys",
+          "command": "sort-json.doNotPromptCollectionKeys",
+          "group": "thinker.sort-json@11"
         }
       ],
       "sort-json.subMenu": [
@@ -435,6 +478,16 @@
           "when": "!config.sort-json.settings.contextMenu.isCaseSensitive && config.sort-json.settings.isCaseSensitive",
           "command": "sort-json.setCaseInSensitive",
           "group": "thinker.sort-json@9"
+        },
+        {
+          "when": "!config.sort-json.settings.contextMenu.isCaseSensitive && !config.sort-json.settings.promptCollectionKeys",
+          "command": "sort-json.promptCollectionKeys",
+          "group": "thinker.sort-json@10"
+        },
+        {
+          "when": "!config.sort-json.settings.contextMenu.isCaseSensitive && config.sort-json.settings.promptCollectionKeys",
+          "command": "sort-json.doNotPromptCollectionKeys",
+          "group": "thinker.sort-json@11"
         }
       ]
     },
@@ -456,7 +509,7 @@
   "devDependencies": {
     "@types/comment-json": "^2.4.2",
     "@types/lodash": "^4.14.191",
-    "@types/node": "14.x",
+    "@types/node": "^14.18.63",
     "@types/vscode": "^1.73.0",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
