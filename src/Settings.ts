@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { ListsSortTypes, ObjectsSortTypes, SortModes, ValueTypeOrder } from './enum';
+import { compareFileName } from './utils';
 
 export class Settings {
   static get configuration() {
@@ -68,16 +69,8 @@ export class Settings {
       const orderOverrideKeys = Settings.getSettings('orderOverrideKeys') || [];
 
       if (_.isPlainObject(orderOverrideKeys)) {
-
         if (orderOverrideKeys[currentFileName]) return orderOverrideKeys[currentFileName];
-
-        const matchedKey = Object.keys(orderOverrideKeys).find(key => {
-          try {
-            return new RegExp(key).test(currentFilePath) || currentFilePath.includes(key);
-          } catch (error) {
-            return currentFilePath.includes(key);
-          }
-        }) ?? "*";
+        const matchedKey = Object.keys(orderOverrideKeys).find(compareFileName) ?? "*";
         return orderOverrideKeys[matchedKey] || [];
       }
 
@@ -106,5 +99,9 @@ export class Settings {
 
   static get showInfoMsg() {
     return Settings.getSettings('showInfoMsg') as boolean;
+  }
+
+  static get ignoreFiles() {
+    return Settings.getSettings('ignoreFiles') as string[] || [];
   }
 }

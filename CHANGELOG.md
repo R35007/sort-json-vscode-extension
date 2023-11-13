@@ -1,5 +1,10 @@
 # Change Log
 
+## v19.1.0
+
+- Added - `sort-json.settings.ignoreFiles` - Provide list of file names to ignore sort from code action quick fix
+- Fixed - On sorting not adding double quotes for keys and values for the `json`, `jsonc` type files issue fixed.
+
 ## v19.0.0
 
 - Removed - `Preserver Order` prompt in the Collection. instead don't select any key and click ok on the quick pick to preserver the order.

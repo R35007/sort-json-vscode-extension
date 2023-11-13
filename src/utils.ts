@@ -48,9 +48,11 @@ export const getJSONDetails = (originalData: string, hideError = false) => {
       return { data, endDelimiter, originalData, stringify: jsonc.stringify, uniqueCode };
     } catch (error: any) {
       try {
+        const languageId = vscode.window.activeTextEditor?.document.languageId || "";
         // If parsing json with comment-json doesn't work the try with json5 parsing
         const data = json5.parse(dataText) as object | any[];
-        return { data, endDelimiter, originalData, stringify: json5.stringify, uniqueCode };
+        const stringify = ["json", "jsonc", "jsonl"].includes(languageId) ? JSON.stringify : json5.stringify;
+        return { data, endDelimiter, originalData, stringify, uniqueCode };
       } catch (error: any) {
         !hideError && vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
         return;
@@ -249,3 +251,11 @@ export const saveSortedJSON = (sortedJson: any, editorProps: ReturnType<typeof g
   });
 };
 
+export const compareFileName = key => {
+  const currentFilePath = vscode.window.activeTextEditor?.document.fileName.replace(/\\/g, "/") || "";
+  try {
+    return new RegExp(key).test(currentFilePath) || currentFilePath.includes(key);
+  } catch (error) {
+    return currentFilePath.includes(key);
+  }
+};

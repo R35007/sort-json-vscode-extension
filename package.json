@@ -2,7 +2,7 @@
   "name": "sort-json",
   "displayName": "Sort JSON",
   "description": "Simple JSON Object and Array sort",
-  "version": "19.0.0",
+  "version": "19.1.0",
   "publisher": "Thinker",
   "license": "MIT",
   "icon": "images/sort-json-logo.png",
@@ -349,6 +349,13 @@
           "type": "boolean",
           "default": true,
           "description": "Set to false if you don't want to show Information message."
+        },
+        "sort-json.settings.ignoreFiles": {
+          "order": 15,
+          "type": "array",
+          "default": [],
+          "items": "string",
+          "description": "Provide list of file names to ignore sort from code action quick fix"
         }
       }
     },
