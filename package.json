@@ -2,7 +2,7 @@
   "name": "sort-json",
   "displayName": "Sort JSON",
   "description": "Simple JSON Object and Array sort",
-  "version": "19.1.0",
+  "version": "19.1.1",
   "publisher": "Thinker",
   "license": "MIT",
   "icon": "images/sort-json-logo.png",
@@ -32,7 +32,9 @@
     "vscode": "^1.73.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Programming Languages",
+    "Formatters"
   ],
   "activationEvents": [
     "onStartupFinished"

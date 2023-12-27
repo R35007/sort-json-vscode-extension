@@ -8,14 +8,7 @@ export class SortJSONFixAllProvider implements vscode.CodeActionProvider {
     static metadata = { providedCodeActionKinds: [SortJSONFixAllProvider.fixAllCodeActionKind] };
 
     async provideCodeActions(_document, _range, context, _token) {
-        if (!context.only) return [];
-
-        if (
-            !context.only.contains(SortJSONFixAllProvider.fixAllCodeActionKind) &&
-            !SortJSONFixAllProvider.fixAllCodeActionKind.contains(context.only)
-        ) {
-            return [];
-        }
+        if (!["source.fixAll", "source.fixAll.sort-json"].includes(context.only.value)) return [];
 
         const filesToIgnore = Settings.ignoreFiles;
         const shouldIgnoreFix = filesToIgnore.some(compareFileName);

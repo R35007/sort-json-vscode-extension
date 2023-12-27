@@ -7,7 +7,7 @@ export class SortJSONQuickFixProvider implements vscode.CodeActionProvider {
 
     static metadata = { providedCodeActionKinds: [SortJSONQuickFixProvider.quickFixCodeActionKind] };
 
-    async provideCodeActions(document, _range, context, _token) {
+    async provideCodeActions(_document, _range, _context, _token) {
         const editorProps = getEditorProps();
         if (!editorProps) return; // exit if there is no active editor
 

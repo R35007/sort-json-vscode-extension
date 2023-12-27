@@ -1,5 +1,9 @@
 # Change Log
 
+## v19.1.1
+
+- Fixed - JSON sorts automatically on selecting `Source Action` from context issue fixed.
+
 ## v19.1.0
 
 - Added - `sort-json.settings.ignoreFiles` - Provide list of file names to ignore sort from code action quick fix

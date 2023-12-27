@@ -111,7 +111,7 @@ There's a vscode setting for formatters (settings.json):
 
 ````json
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit" // set to true or explicit to sort json files on save
+    "source.fixAll": "explicit" // set to "explicit" to sort json files on save
   }
 ```
 
@@ -120,7 +120,7 @@ But you can also selectively enable/disable this formatter with (settings.json):
 ```jsonc
 {
     "editor.codeActionsOnSave": {
-        "source.fixAll.sort-json": "explicit" // set to explicit true to sort json files on save. set to "never" or false to stop sorting on save
+        "source.fixAll.sort-json": "never" // set to "explicit" to sort json files on save. set to "never" to stop sorting on save
     }
 }
 ```
