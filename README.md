@@ -4,6 +4,10 @@ Simple JSON Object and Array sort.
 
 <img style="max-width: 2000px;" width="90%" src="https://user-images.githubusercontent.com/23217228/206927500-6b5202ff-f06f-4b2c-8fd2-7a218ff5005a.gif">
 
+<a href="https://buymeacoffee.com/r35007" target="_blank">
+  <img src="https://r35007.github.io/Siva_Profile/images//buymeacoffee.png" />
+</a>
+
 ## Features
 
 - Sort JSON with comments.
@@ -19,6 +23,7 @@ Simple JSON Object and Array sort.
 - Sort Object
 - Sort List items
 - Sort Collections
+- Sort order override
 - Also supports Quick Fix and Fix All code action
 
 ## Custom Sort
@@ -137,5 +142,5 @@ Or use a hotkey, if you prefer (keybindings.json):
 }
 ```
 
-**Enjoy!**
 ````
+**Enjoy!**

@@ -1,5 +1,9 @@
 # Change Log
 
+## v19.1.2
+
+- Readme update
+
 ## v19.1.1
 
 - Fixed - JSON sorts automatically on selecting `Source Action` from context issue fixed.
