@@ -1,5 +1,13 @@
 # Change Log
 
+## v20.0.0
+
+- Modified - Now Sort JSON respects the `files.insertFinalNewline` setting.
+- Added - `sort-json.settings.forceSort` setting helps to sort and re paint the JSON string even if it is already sorted
+- Added - `sort-json.settings.jsonFormatIndent` setting helps to provide a custom spacing to format the JSON. Set to empty to use the editor's tab size
+- Added - `Collection` in the `sort-json.settings.sortValueTypeOrder`. Helps to sort the JSON by `Collection` value type
+- Fixed - not sorting if the JSON has a `null` value issue fixed.
+
 ## v19.1.2
 
 - Readme update

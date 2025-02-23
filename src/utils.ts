@@ -75,6 +75,7 @@ export const comparisonQuickPick = async (customComparisons: vscode.QuickPickIte
   const pick: vscode.QuickPickItem | undefined = await new Promise((resolve) => {
     let isResolved = false;
     const quickPick = vscode.window.createQuickPick();
+    quickPick.ignoreFocusOut = true;
     quickPick.title = "Custom Comparison";
     quickPick.placeholder = "Please provide your own custom comparison code here.";
     quickPick.matchOnDescription = false;
