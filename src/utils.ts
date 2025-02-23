@@ -23,45 +23,40 @@ export const getEditorProps = () => {
   return { editor, document, selection, fullFile, editorText, selectedText, hasSelectedText };
 };
 
-export const getJSONDetails = (originalData: string = "", hideError = false, hasSelection = false) => {
-  let endDelimiter = "";
-  let dataText = originalData;
-
-  // remove , or ; at the end of the string and set it to the delimiter
-  if (dataText.endsWith(";") || dataText.endsWith(",") || dataText.endsWith("\n")) {
-    endDelimiter = dataText.endsWith(";") ? ";" : dataText.endsWith(",") ? "," : "\n";
-    dataText = dataText.substring(0, dataText.length - 1);
-  }
-
-  endDelimiter = !hasSelection && Settings.insertFinalNewline && endDelimiter !== "\n" ? "\n" : endDelimiter;
-
-  const uniqueCode = "\\fu" + nanoid();
-  // Escape all unicode sequence string. "\\u21D3" to "\\fu21D3"
-  if (Settings.preserveUnicodeString) {
-    dataText = dataText.replace(/\\u/gi, uniqueCode);
-  }
-
-  try {
-    const data = JSON.parse(dataText) as object | any[];
-    return { data, originalData, endDelimiter, stringify: JSON.stringify, uniqueCode };
-  } catch (err) {
-    try {
-      // If parsing json with comment-json doesn't work the try with json5 parsing
-      const data = jsonc.parse(dataText) as object | any[];
-      return { data, endDelimiter, originalData, stringify: jsonc.stringify, uniqueCode };
-    } catch (error: any) {
-      try {
-        const languageId = vscode.window.activeTextEditor?.document.languageId || "";
-        // If parsing json with comment-json doesn't work the try with json5 parsing
-        const data = json5.parse(dataText) as object | any[];
-        const stringify = ["json", "jsonc", "jsonl"].includes(languageId) ? JSON.stringify : json5.stringify;
-        return { data, endDelimiter, originalData, stringify, uniqueCode };
-      } catch (error: any) {
-        !hideError && vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
-        return;
-      }
+export const getJSONDetails = (originalData = "", hideError = false, hasSelection = false) => {
+    let endDelimiter = [";", ",", "\n"].includes(originalData.trim().slice(-1)) ? originalData.trim().slice(-1) : "";
+    let dataText = endDelimiter ? originalData.trim().slice(0, -1) : originalData;
+    
+    if (!hasSelection && Settings.insertFinalNewline && endDelimiter !== "\n") {
+        endDelimiter = "\n";
     }
-  }
+
+    const uniqueCode = "\\fu" + nanoid();
+    // Escape all unicode sequence string. "\\u21D3" to "\\fu21D3"
+    if (Settings.preserveUnicodeString) {
+        dataText = dataText.replace(/\\u/gi, uniqueCode);
+    }
+
+    try {
+        const data = JSON.parse(dataText);
+        return { data, originalData, endDelimiter, stringify: JSON.stringify, uniqueCode };
+    } catch (err) {
+        try {
+           // If parsing json with comment-json doesn't work the try with json5 parsing
+            const data = jsonc.parse(dataText);
+            return { data, endDelimiter, originalData, stringify: jsonc.stringify, uniqueCode };
+        } catch {
+            try {
+                const languageId = vscode.window.activeTextEditor?.document.languageId || "";
+                // If parsing json with comment-json doesn't work the try with json5 parsing
+                const data = json5.parse(dataText);
+                const stringify = ["json", "jsonc", "jsonl"].includes(languageId) ? JSON.stringify : json5.stringify;
+                return { data, endDelimiter, originalData, stringify, uniqueCode };
+            } catch (error: any) {
+                !hideError && vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
+            }
+        }
+    }
 };
 
 export const comparisonQuickPick = async (customComparisons: vscode.QuickPickItem[] = []) => {
