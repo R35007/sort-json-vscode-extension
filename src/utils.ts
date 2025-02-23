@@ -8,21 +8,21 @@ const nanoid = customAlphabet("1234567890abcdef", 5);
 
 export const getEditorProps = () => {
   const editor = vscode.window.activeTextEditor;
-  if (editor) {
-    const document = editor.document;
-    const selection = editor.selection;
-    const firstLine = document.lineAt(0);
-    const lastLine = document.lineAt(document.lineCount - 1);
-    const fullFile = new vscode.Range(firstLine.range.start, lastLine.range.end);
-    const editorText = document.getText(fullFile);
-    const selectedText = document.getText(selection);
-    return { editor, document, selection, fullFile, editorText, selectedText };
-  }
 
-  return;
+  if (!editor) return;
+
+  const document = editor.document;
+  const selection = editor.selection;
+  const firstLine = document.lineAt(0);
+  const lastLine = document.lineAt(document.lineCount - 1);
+  const fullFile = new vscode.Range(firstLine.range.start, lastLine.range.end);
+  const editorText = document.getText(fullFile);
+  const selectedText = document.getText(selection);
+  const hasSelectedText = selectedText?.trim().length > 0;
+  return { editor, document, selection, fullFile, editorText, selectedText, hasSelectedText };
 };
 
-export const getJSONDetails = (originalData: string, hideError = false) => {
+export const getJSONDetails = (originalData: string, hideError = false, hasSelection = false) => {
   let endDelimiter = "";
   let dataText = originalData;
 
@@ -31,6 +31,8 @@ export const getJSONDetails = (originalData: string, hideError = false) => {
     endDelimiter = dataText.endsWith(";") ? ";" : dataText.endsWith(",") ? "," : "\n";
     dataText = dataText.substring(0, dataText.length - 1);
   }
+
+  endDelimiter = !hasSelection && Settings.insertFinalNewline && endDelimiter !== "\n" ? "\n" : endDelimiter;
 
   const uniqueCode = "\\fu" + nanoid();
   // Escape all unicode sequence string. "\\u21D3" to "\\fu21D3"

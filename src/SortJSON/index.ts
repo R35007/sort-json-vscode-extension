@@ -110,7 +110,7 @@ export default class SortJSON {
 
     // Depth First Sort
     // sort each value in an object ( sort children before top level sort)
-    result = Object.fromEntries(Object.entries(result).map(([key, val]) => {
+    result = Object.fromEntries(Object.entries(result).map(([key]) => {
       // set key in square brackets if it contains any special characters.
       // ex : "foobar" -> path.foobar, "foo_bar" -> path.foo_bar, "foo-bar" -> path["foo-bar"], "foo bar" -> path["foo bar"]
       const nestedPath = /\W/.test(key) ? `${path}.${key}` : `${path}["${key}"]`;
@@ -190,7 +190,7 @@ export default class SortJSON {
       const jsonText = editorProps.selectedText.trim() || editorProps.editorText;
       if (!jsonText) return; // exit if there is no text in editor
 
-      const jsonDetails = getJSONDetails(jsonText) || { data: undefined };
+      const jsonDetails = getJSONDetails(jsonText, false, editorProps.hasSelectedText) || { data: undefined };
       const data = jsonDetails.data;
       if (!data) return; // return if no data to sort
 

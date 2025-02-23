@@ -104,4 +104,8 @@ export class Settings {
   static get ignoreFiles() {
     return Settings.getSettings('ignoreFiles') as string[] || [];
   }
+
+  static get insertFinalNewline() {
+    return vscode.workspace.getConfiguration().get("files.insertFinalNewline") as boolean;
+  }
 }
