@@ -2,12 +2,11 @@ import * as _ from "lodash";
 import * as path from "path";
 import * as vscode from "vscode";
 import { Settings } from "../Settings";
-import { ListsSortTypes, ObjectsSortTypes, SortModes } from "../enum";
+import { ListsSortTypes, ObjectsSortTypes, SortModes, ValueTypeOrder } from "../enum";
 import {
-  copySymbolsToObj, getEditorProps, getJSONDetails, getValueTypes, interpolateEntries, interpolateList, saveSortedJSON
+  copySymbolsToObj, getEditorProps, getJSONDetails, getValueTypes, interpolateEntries, interpolateList, isValueType, saveSortedJSON
 } from "../utils";
 import { getCustomComparison, getKeysToSort, getLength } from './getters';
-
 
 type SortOptions = {
   isDescending?: boolean;
@@ -32,8 +31,8 @@ export default class SortJSON {
       if (isAllNumber) return arr.sort((a, b) => a - b);
       if (isAllString && Settings.isCaseSensitive) return arr.sort((a, b) => (a === b ? 0 : a > b ? 1 : -1));
       if (isAllString && !Settings.isCaseSensitive) return arr.sort((a, b) => (_.toLower(a) === _.toLower(b) ? 0 : _.toLower(a) > _.toLower(b) ? 1 : -1));
-      if (isAllList) return arr.sort((a, b) => a.length - b.length);
-      if (isCollection) return this.keysToSort.length ? _.sortBy(arr, this.keysToSort) : arr;
+      if (isAllList) return arr.sort((a, b) => a?.length - b?.length);
+      if (isCollection) return this.keysToSort?.length ? _.sortBy(arr, this.keysToSort) : arr;
 
       return arr.sort();
     }
@@ -41,8 +40,8 @@ export default class SortJSON {
     if (sortType === ListsSortTypes.valueLength) return arr.sort((a, b) => getLength(a) - getLength(b));
 
     if (sortType === ListsSortTypes.valueType) {
-      const typeReducer: any = (res: string[], valueType: string) => {
-        const filteredValues = arr.filter((val) => _[`${"is" + valueType}`](val));
+      const typeReducer: any = (res: string[], valueType: ValueTypeOrder) => {
+        const filteredValues = arr.filter((val) => isValueType(val, valueType));
         return [...res, ...this.#getSortedValues(filteredValues, ListsSortTypes.value)];
       };
 
@@ -57,7 +56,7 @@ export default class SortJSON {
 
     if (sortType === ObjectsSortTypes.key && Settings.isCaseSensitive) return entries.sort(([a], [b]) => a === b ? 0 : a > b ? 1 : -1);
     if (sortType === ObjectsSortTypes.key && !Settings.isCaseSensitive) return entries.sort(([a], [b]) => _.toLower(a) === _.toLower(b) ? 0 : _.toLower(a) > _.toLower(b) ? 1 : -1);
-    if (sortType === ObjectsSortTypes.keyLength) return entries.sort(([a], [b]) => a.length - b.length);
+    if (sortType === ObjectsSortTypes.keyLength) return entries.sort(([a], [b]) => a?.length - b?.length);
 
     if (sortType === ObjectsSortTypes.value) {
 
@@ -66,8 +65,8 @@ export default class SortJSON {
       if (isAllNumber) return entries.sort(([, val1], [, val2]) => val1 - val2);
       if (isAllString && Settings.isCaseSensitive) return entries.sort(([, val1], [, val2]) => (val1 === val2 ? 0 : val1 > val2 ? 1 : -1));
       if (isAllString && !Settings.isCaseSensitive) return entries.sort(([, val1], [, val2]) => (_.toLower(val1) === _.toLower(val2) ? 0 : _.toLower(val1) > _.toLower(val2) ? 1 : -1));
-      if (isAllList) return entries.sort(([, val1], [, val2]) => val1.length - val2.length);
-      if (isAllObject) return entries.sort(([, val1], [, val2]) => Object.keys(val1).length - Object.keys(val2).length);
+      if (isAllList) return entries.sort(([, val1], [, val2]) => val1?.length - val2?.length);
+      if (isAllObject) return entries.sort(([, val1], [, val2]) => Object.keys(val1)?.length - Object.keys(val2)?.length);
 
       return entries.sort(([a], [b]) => a === b ? 0 : a > b ? 1 : -1);
     }
@@ -75,8 +74,8 @@ export default class SortJSON {
     if (sortType === ObjectsSortTypes.valueLength) return entries.sort(([a], [b]) => getLength(a) - getLength(b));
 
     if (sortType === ObjectsSortTypes.valueType) {
-      const typeReducer: any = (res: string[], valueType: string) => {
-        const filteredValues = entries.filter(([, val]) => _[`is${valueType}`](val));
+      const typeReducer: any = (res: string[], valueType: ValueTypeOrder) => {
+        const filteredValues = entries.filter(([, val]) => isValueType(val, valueType));
         return [...res, ...this.#getSortedEntries(filteredValues, ObjectsSortTypes.value)];
       };
 
@@ -110,7 +109,7 @@ export default class SortJSON {
 
     // Depth First Sort
     // sort each value in an object ( sort children before top level sort)
-    result = Object.fromEntries(Object.entries(result).map(([key, val]) => {
+    result = Object.fromEntries(Object.entries(result).map(([key]) => {
       // set key in square brackets if it contains any special characters.
       // ex : "foobar" -> path.foobar, "foo_bar" -> path.foo_bar, "foo-bar" -> path["foo-bar"], "foo bar" -> path["foo bar"]
       const nestedPath = /\W/.test(key) ? `${path}.${key}` : `${path}["${key}"]`;
@@ -190,7 +189,7 @@ export default class SortJSON {
       const jsonText = editorProps.selectedText.trim() || editorProps.editorText;
       if (!jsonText) return; // exit if there is no text in editor
 
-      const jsonDetails = getJSONDetails(jsonText) || { data: undefined };
+      const jsonDetails = getJSONDetails(jsonText, false, editorProps.hasSelectedText) || { data: undefined };
       const data = jsonDetails.data;
       if (!data) return; // return if no data to sort
 

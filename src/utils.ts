@@ -4,32 +4,52 @@ import * as _ from "lodash";
 import { customAlphabet } from "nanoid";
 import * as vscode from "vscode";
 import { Settings } from "./Settings";
+import { ValueTypeOrder } from './enum';
 const nanoid = customAlphabet("1234567890abcdef", 5);
 
 export const getEditorProps = () => {
   const editor = vscode.window.activeTextEditor;
-  if (editor) {
-    const document = editor.document;
-    const selection = editor.selection;
-    const firstLine = document.lineAt(0);
-    const lastLine = document.lineAt(document.lineCount - 1);
-    const fullFile = new vscode.Range(firstLine.range.start, lastLine.range.end);
-    const editorText = document.getText(fullFile);
-    const selectedText = document.getText(selection);
-    return { editor, document, selection, fullFile, editorText, selectedText };
-  }
 
-  return;
+  if (!editor) return;
+
+  const document = editor.document;
+  const selection = editor.selection;
+  const firstLine = document.lineAt(0);
+  const lastLine = document.lineAt(document.lineCount - 1);
+  const fullFile = new vscode.Range(firstLine.range.start, lastLine.range.end);
+  const editorText = document.getText(fullFile);
+  const selectedText = document.getText(selection);
+  const hasSelectedText = selectedText?.trim().length > 0;
+  return { editor, document, selection, fullFile, editorText, selectedText, hasSelectedText };
 };
 
-export const getJSONDetails = (originalData: string, hideError = false) => {
-  let endDelimiter = "";
-  let dataText = originalData;
+const parseJSON = (dataText: string) => {
+  try {
+    const data = JSON.parse(dataText);
+    return { data, stringify: JSON.stringify };
+  } catch (err) {
+    try {
+      // If parsing json with comment-json doesn't work the try with json5 parsing
+      const data = jsonc.parse(dataText);
+      return { data, stringify: jsonc.stringify };
+    } catch {
+      const languageId = vscode.window.activeTextEditor?.document.languageId || "";
+      // If parsing json with comment-json doesn't work the try with json5 parsing
+      const data = json5.parse(dataText);
+      const stringify = ["json", "jsonc", "jsonl"].includes(languageId) ? JSON.stringify : json5.stringify;
+      return { data, stringify };
+    }
+  }
+}
 
-  // remove , or ; at the end of the string and set it to the delimiter
-  if (dataText.endsWith(";") || dataText.endsWith(",") || dataText.endsWith("\n")) {
-    endDelimiter = dataText.endsWith(";") ? ";" : dataText.endsWith(",") ? "," : "\n";
-    dataText = dataText.substring(0, dataText.length - 1);
+const checkBrackets = (text) => (text.startsWith('{') && text.endsWith('}')) || (text.startsWith('[') && text.endsWith(']'))
+
+export const getJSONDetails = (originalData = "", hideError = false, hasSelection = false) => {
+  let endDelimiter = [";", ",", "\n"].includes(originalData.trim().slice(-1)) ? originalData.trim().slice(-1) : "";
+  let dataText = endDelimiter ? originalData.trim().slice(0, -1) : originalData.trim();
+
+  if (!hasSelection && Settings.insertFinalNewline && endDelimiter !== "\n") {
+    endDelimiter = "\n";
   }
 
   const uniqueCode = "\\fu" + nanoid();
@@ -38,27 +58,30 @@ export const getJSONDetails = (originalData: string, hideError = false) => {
     dataText = dataText.replace(/\\u/gi, uniqueCode);
   }
 
-  try {
-    const data = JSON.parse(dataText) as object | any[];
-    return { data, originalData, endDelimiter, stringify: JSON.stringify, uniqueCode };
-  } catch (err) {
+  if (checkBrackets(dataText.trim())) {
     try {
-      // If parsing json with comment-json doesn't work the try with json5 parsing
-      const data = jsonc.parse(dataText) as object | any[];
-      return { data, endDelimiter, originalData, stringify: jsonc.stringify, uniqueCode };
+      const { data, stringify } = parseJSON(dataText);
+      return { data, endDelimiter, originalData, stringify, uniqueCode, wrappedBrackets: "" };
     } catch (error: any) {
+      !hideError && vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
+      return { data: "", endDelimiter, originalData, stringify: JSON.stringify, uniqueCode, wrappedBrackets: "" };
+    }
+  } else if (hasSelection) {
+    try {
+      const { data, stringify } = parseJSON(`{${dataText}}`);
+      return { data, endDelimiter, originalData, stringify, uniqueCode, wrappedBrackets: "{}" };
+    } catch {
       try {
-        const languageId = vscode.window.activeTextEditor?.document.languageId || "";
-        // If parsing json with comment-json doesn't work the try with json5 parsing
-        const data = json5.parse(dataText) as object | any[];
-        const stringify = ["json", "jsonc", "jsonl"].includes(languageId) ? JSON.stringify : json5.stringify;
-        return { data, endDelimiter, originalData, stringify, uniqueCode };
+        const { data, stringify } = parseJSON(`[${dataText}]`);
+        return { data, endDelimiter, originalData, stringify, uniqueCode, wrappedBrackets: "[]" };
       } catch (error: any) {
         !hideError && vscode.window.showErrorMessage(`Invalid JSON. ${error.message}`);
-        return;
+        return { data: "", endDelimiter, originalData, stringify: JSON.stringify, uniqueCode, wrappedBrackets: "" };
       }
     }
-  }
+  };
+
+  return { data: "", endDelimiter, originalData, stringify: JSON.stringify, uniqueCode, wrappedBrackets: "" };
 };
 
 export const comparisonQuickPick = async (customComparisons: vscode.QuickPickItem[] = []) => {
@@ -72,6 +95,7 @@ export const comparisonQuickPick = async (customComparisons: vscode.QuickPickIte
   const pick: vscode.QuickPickItem | undefined = await new Promise((resolve) => {
     let isResolved = false;
     const quickPick = vscode.window.createQuickPick();
+    quickPick.ignoreFocusOut = true;
     quickPick.title = "Custom Comparison";
     quickPick.placeholder = "Please provide your own custom comparison code here.";
     quickPick.matchOnDescription = false;
@@ -233,16 +257,19 @@ export const saveSortedJSON = (sortedJson: any, editorProps: ReturnType<typeof g
   if (!editorProps || !jsonDetails) return;
 
   const replaceRange = editorProps.selectedText ? editorProps.selection : editorProps.fullFile;
+  const indent = Settings.jsonFormatIndent ?? (editorProps.editor.options.tabSize || "\t");
 
   editorProps.editor.edit((editBuilder) => {
-    let sortedStr = jsonDetails.stringify(sortedJson, null, editorProps.editor.options.tabSize || "\t") + jsonDetails.endDelimiter;
+    let sortedStr = jsonDetails.stringify(sortedJson, null, indent);
+    sortedStr = jsonDetails.wrappedBrackets ? sortedStr.slice(1, -1).trim() : sortedStr.trim();
+    sortedStr = sortedStr + jsonDetails.endDelimiter
 
     // Replace all uniqueCode with "\\u".
     if (Settings.preserveUnicodeString) {
-      sortedStr = sortedStr.replace(new RegExp(`\\${jsonDetails.uniqueCode}`, "gi"), "\\u"); // replace unicode string
+      sortedStr = sortedStr.trim().replace(new RegExp(`\\${jsonDetails.uniqueCode}`, "gi"), "\\u").trim(); // replace unicode string
     }
 
-    if (jsonDetails.originalData.replace(/\n/g, '').replace(/\s+/g, '') === sortedStr.replace(/\n/g, '').replace(/\s+/g, '')) {
+    if (!Settings.forceSort && jsonDetails.originalData.replace(/\n/g, '').replace(/\s+/g, '') === sortedStr.replace(/\n/g, '').replace(/\s+/g, '')) {
       !isFixAllAction && Settings.showInfoMsg && vscode.window.showInformationMessage("Already Sorted.");
     } else {
       editBuilder.replace(replaceRange, sortedStr);
@@ -259,3 +286,14 @@ export const compareFileName = key => {
     return currentFilePath.includes(key);
   }
 };
+
+export const isValueType = (value: unknown, valueType: ValueTypeOrder) => {
+  if (valueType === ValueTypeOrder.boolean) return _.isBoolean(value)
+  if (valueType === ValueTypeOrder.null) return _.isNull(value)
+  if (valueType === ValueTypeOrder.number) return _.isNumber(value)
+  if (valueType === ValueTypeOrder.string) return _.isString(value)
+  if (valueType === ValueTypeOrder.array) return _.isArray(value) && !value.every(_.isPlainObject)
+  if (valueType === ValueTypeOrder.collection) return _.isArray(value) && value.every(_.isPlainObject)
+  if (valueType === ValueTypeOrder.plainObject) return _.isPlainObject(value)
+  return true;
+}

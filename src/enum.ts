@@ -41,6 +41,7 @@ export enum ValueTypeOrder {
   number = "Number",
   string = "String",
   array = "Array",
+  collection = "Collection",
   plainObject = "PlainObject",
 }
 

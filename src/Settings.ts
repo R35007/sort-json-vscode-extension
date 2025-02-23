@@ -41,7 +41,8 @@ export class Settings {
   }
 
   static get sortValueTypeOrder() {
-    return Settings.getSettings('sortValueTypeOrder') as ValueTypeOrder[];
+    const valueTypeOrder = Settings.getSettings('sortValueTypeOrder') as ValueTypeOrder[];
+    return [...valueTypeOrder, ...Object.values(ValueTypeOrder).filter(item => !valueTypeOrder.includes(item))] as ValueTypeOrder[];
   }
 
   static get isCaseSensitive() {
@@ -103,5 +104,17 @@ export class Settings {
 
   static get ignoreFiles() {
     return Settings.getSettings('ignoreFiles') as string[] || [];
+  }
+
+  static get insertFinalNewline() {
+    return vscode.workspace.getConfiguration().get("files.insertFinalNewline") as boolean;
+  }
+
+  static get forceSort() {
+    return Settings.getSettings('forceSort') as boolean;
+  }
+
+  static get jsonFormatIndent() {
+    return Settings.getSettings('jsonFormatIndent') as number | null;
   }
 }

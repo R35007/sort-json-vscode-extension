@@ -14,7 +14,7 @@ export class SortJSONQuickFixProvider implements vscode.CodeActionProvider {
         const selectedText = editorProps.selectedText.trim();
         if (!selectedText) return; // exit if there is no text is selected
 
-        const jsonDetails = getJSONDetails(selectedText, true);
+        const jsonDetails = getJSONDetails(selectedText, true, true);
         if (!jsonDetails || !jsonDetails.data) return; // exit if selected text is not a valid json
 
         return [

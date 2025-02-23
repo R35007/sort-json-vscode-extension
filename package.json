@@ -2,7 +2,7 @@
   "name": "sort-json",
   "displayName": "Sort JSON",
   "description": "Simple JSON Object and Array sort",
-  "version": "19.1.2",
+  "version": "20.0.0",
   "publisher": "Thinker",
   "license": "MIT",
   "icon": "images/sort-json-logo.png",
@@ -185,6 +185,7 @@
             "Number",
             "String",
             "Array",
+            "Collection",
             "PlainObject"
           ],
           "enum": [
@@ -193,6 +194,7 @@
             "Number",
             "String",
             "Array",
+            "Collection",
             "PlainObject"
           ],
           "items": {
@@ -358,6 +360,21 @@
           "default": [],
           "items": "string",
           "description": "Provide list of file names to ignore sort from code action quick fix"
+        },
+        "sort-json.settings.forceSort": {
+          "order": 16,
+          "type": "boolean",
+          "default": false,
+          "description": "If true it forcefully sorts and writes the JSON even if it is already sorted."
+        },
+        "sort-json.settings.jsonFormatIndent": {
+          "order": 17,
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": null,
+          "description": "Set JSON sorting formate indent spaces. Set to empty to use the editor tab size"
         }
       }
     },
@@ -516,22 +533,22 @@
     "compile-tests": "tsc -p . --outDir out"
   },
   "devDependencies": {
-    "@types/comment-json": "^2.4.2",
-    "@types/lodash": "^4.14.191",
+    "@types/comment-json": "^2.4.5",
+    "@types/lodash": "^4.17.15",
     "@types/node": "^14.18.63",
-    "@types/vscode": "^1.73.0",
-    "@typescript-eslint/eslint-plugin": "^5.16.0",
-    "@typescript-eslint/parser": "^5.16.0",
-    "eslint": "^8.11.0",
-    "ts-loader": "^9.2.8",
-    "typescript": "^4.5.5",
-    "webpack": "^5.70.0",
-    "webpack-cli": "^4.9.2"
+    "@types/vscode": "^1.97.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "eslint": "^8.57.1",
+    "ts-loader": "^9.5.2",
+    "typescript": "^4.9.5",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "comment-json": "^4.2.3",
-    "json5": "^2.2.2",
+    "comment-json": "^4.2.5",
+    "json5": "^2.2.3",
     "lodash": "^4.17.21",
-    "nanoid": "^4.0.0"
+    "nanoid": "^5.1.2"
   }
 }
