@@ -45,9 +45,9 @@ export const getKeysToSort = async (data: object) => {
 };
 
 // If list get length, if object get size else convert to string and get length
-export const getLength = (val) => {
+export const getLength = (val: unknown = ""): number => {
     if (_.isArray(val)) return val.length;
-    if (_.isPlainObject(val)) return Object.keys(val).length;
-    if (_.isInteger(parseInt(val))) return val;
+    if (_.isPlainObject(val)) return Object.keys(val as object).length;
+    if (_.isInteger(parseInt(val as string))) return val as number;
     return _.toString(val).length;
 };

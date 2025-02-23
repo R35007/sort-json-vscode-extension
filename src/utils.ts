@@ -22,7 +22,7 @@ export const getEditorProps = () => {
   return { editor, document, selection, fullFile, editorText, selectedText, hasSelectedText };
 };
 
-export const getJSONDetails = (originalData: string, hideError = false, hasSelection = false) => {
+export const getJSONDetails = (originalData: string = "", hideError = false, hasSelection = false) => {
   let endDelimiter = "";
   let dataText = originalData;
 

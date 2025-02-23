@@ -32,8 +32,8 @@ export default class SortJSON {
       if (isAllNumber) return arr.sort((a, b) => a - b);
       if (isAllString && Settings.isCaseSensitive) return arr.sort((a, b) => (a === b ? 0 : a > b ? 1 : -1));
       if (isAllString && !Settings.isCaseSensitive) return arr.sort((a, b) => (_.toLower(a) === _.toLower(b) ? 0 : _.toLower(a) > _.toLower(b) ? 1 : -1));
-      if (isAllList) return arr.sort((a, b) => a.length - b.length);
-      if (isCollection) return this.keysToSort.length ? _.sortBy(arr, this.keysToSort) : arr;
+      if (isAllList) return arr.sort((a, b) => a?.length - b?.length);
+      if (isCollection) return this.keysToSort?.length ? _.sortBy(arr, this.keysToSort) : arr;
 
       return arr.sort();
     }
@@ -57,7 +57,7 @@ export default class SortJSON {
 
     if (sortType === ObjectsSortTypes.key && Settings.isCaseSensitive) return entries.sort(([a], [b]) => a === b ? 0 : a > b ? 1 : -1);
     if (sortType === ObjectsSortTypes.key && !Settings.isCaseSensitive) return entries.sort(([a], [b]) => _.toLower(a) === _.toLower(b) ? 0 : _.toLower(a) > _.toLower(b) ? 1 : -1);
-    if (sortType === ObjectsSortTypes.keyLength) return entries.sort(([a], [b]) => a.length - b.length);
+    if (sortType === ObjectsSortTypes.keyLength) return entries.sort(([a], [b]) => a?.length - b?.length);
 
     if (sortType === ObjectsSortTypes.value) {
 
@@ -66,8 +66,8 @@ export default class SortJSON {
       if (isAllNumber) return entries.sort(([, val1], [, val2]) => val1 - val2);
       if (isAllString && Settings.isCaseSensitive) return entries.sort(([, val1], [, val2]) => (val1 === val2 ? 0 : val1 > val2 ? 1 : -1));
       if (isAllString && !Settings.isCaseSensitive) return entries.sort(([, val1], [, val2]) => (_.toLower(val1) === _.toLower(val2) ? 0 : _.toLower(val1) > _.toLower(val2) ? 1 : -1));
-      if (isAllList) return entries.sort(([, val1], [, val2]) => val1.length - val2.length);
-      if (isAllObject) return entries.sort(([, val1], [, val2]) => Object.keys(val1).length - Object.keys(val2).length);
+      if (isAllList) return entries.sort(([, val1], [, val2]) => val1?.length - val2?.length);
+      if (isAllObject) return entries.sort(([, val1], [, val2]) => Object.keys(val1)?.length - Object.keys(val2)?.length);
 
       return entries.sort(([a], [b]) => a === b ? 0 : a > b ? 1 : -1);
     }
