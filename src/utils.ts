@@ -235,16 +235,17 @@ export const saveSortedJSON = (sortedJson: any, editorProps: ReturnType<typeof g
   if (!editorProps || !jsonDetails) return;
 
   const replaceRange = editorProps.selectedText ? editorProps.selection : editorProps.fullFile;
+  const indent = Settings.jsonFormatIndent ?? (editorProps.editor.options.tabSize || "\t");
 
   editorProps.editor.edit((editBuilder) => {
-    let sortedStr = jsonDetails.stringify(sortedJson, null, editorProps.editor.options.tabSize || "\t") + jsonDetails.endDelimiter;
+    let sortedStr = jsonDetails.stringify(sortedJson, null, indent) + jsonDetails.endDelimiter;
 
     // Replace all uniqueCode with "\\u".
     if (Settings.preserveUnicodeString) {
       sortedStr = sortedStr.replace(new RegExp(`\\${jsonDetails.uniqueCode}`, "gi"), "\\u"); // replace unicode string
     }
 
-    if (jsonDetails.originalData.replace(/\n/g, '').replace(/\s+/g, '') === sortedStr.replace(/\n/g, '').replace(/\s+/g, '')) {
+    if (!Settings.forceSort && jsonDetails.originalData.replace(/\n/g, '').replace(/\s+/g, '') === sortedStr.replace(/\n/g, '').replace(/\s+/g, '')) {
       !isFixAllAction && Settings.showInfoMsg && vscode.window.showInformationMessage("Already Sorted.");
     } else {
       editBuilder.replace(replaceRange, sortedStr);

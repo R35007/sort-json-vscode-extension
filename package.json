@@ -358,6 +358,21 @@
           "default": [],
           "items": "string",
           "description": "Provide list of file names to ignore sort from code action quick fix"
+        },
+        "sort-json.settings.forceSort": {
+          "order": 16,
+          "type": "boolean",
+          "default": false,
+          "description": "If true it forcefully sorts and writes the JSON even if it is already sorted."
+        },
+        "sort-json.settings.jsonFormatIndent": {
+          "order": 17,
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": null,
+          "description": "Set JSON sorting formate indent spaces. Set to empty to use the editor tab size"
         }
       }
     },

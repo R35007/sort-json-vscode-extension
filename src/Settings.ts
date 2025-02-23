@@ -108,4 +108,12 @@ export class Settings {
   static get insertFinalNewline() {
     return vscode.workspace.getConfiguration().get("files.insertFinalNewline") as boolean;
   }
+
+  static get forceSort() {
+    return Settings.getSettings('forceSort') as boolean;
+  }
+
+  static get jsonFormatIndent() {
+    return Settings.getSettings('jsonFormatIndent') as number | null;
+  }
 }
