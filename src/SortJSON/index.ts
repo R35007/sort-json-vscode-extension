@@ -2,12 +2,11 @@ import * as _ from "lodash";
 import * as path from "path";
 import * as vscode from "vscode";
 import { Settings } from "../Settings";
-import { ListsSortTypes, ObjectsSortTypes, SortModes } from "../enum";
+import { ListsSortTypes, ObjectsSortTypes, SortModes, ValueTypeOrder } from "../enum";
 import {
-  copySymbolsToObj, getEditorProps, getJSONDetails, getValueTypes, interpolateEntries, interpolateList, saveSortedJSON
+  copySymbolsToObj, getEditorProps, getJSONDetails, getValueTypes, interpolateEntries, interpolateList, isValueType, saveSortedJSON
 } from "../utils";
 import { getCustomComparison, getKeysToSort, getLength } from './getters';
-
 
 type SortOptions = {
   isDescending?: boolean;
@@ -41,8 +40,8 @@ export default class SortJSON {
     if (sortType === ListsSortTypes.valueLength) return arr.sort((a, b) => getLength(a) - getLength(b));
 
     if (sortType === ListsSortTypes.valueType) {
-      const typeReducer: any = (res: string[], valueType: string) => {
-        const filteredValues = arr.filter((val) => _[`${"is" + valueType}`](val));
+      const typeReducer: any = (res: string[], valueType: ValueTypeOrder) => {
+        const filteredValues = arr.filter((val) => isValueType(val, valueType));
         return [...res, ...this.#getSortedValues(filteredValues, ListsSortTypes.value)];
       };
 
@@ -75,8 +74,8 @@ export default class SortJSON {
     if (sortType === ObjectsSortTypes.valueLength) return entries.sort(([a], [b]) => getLength(a) - getLength(b));
 
     if (sortType === ObjectsSortTypes.valueType) {
-      const typeReducer: any = (res: string[], valueType: string) => {
-        const filteredValues = entries.filter(([, val]) => _[`is${valueType}`](val));
+      const typeReducer: any = (res: string[], valueType: ValueTypeOrder) => {
+        const filteredValues = entries.filter(([, val]) => isValueType(val, valueType));
         return [...res, ...this.#getSortedEntries(filteredValues, ObjectsSortTypes.value)];
       };
 

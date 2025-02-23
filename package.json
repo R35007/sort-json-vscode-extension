@@ -185,6 +185,7 @@
             "Number",
             "String",
             "Array",
+            "Collection",
             "PlainObject"
           ],
           "enum": [
@@ -193,6 +194,7 @@
             "Number",
             "String",
             "Array",
+            "Collection",
             "PlainObject"
           ],
           "items": {

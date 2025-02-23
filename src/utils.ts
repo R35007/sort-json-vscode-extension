@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import { customAlphabet } from "nanoid";
 import * as vscode from "vscode";
 import { Settings } from "./Settings";
+import { ValueTypeOrder } from './enum';
 const nanoid = customAlphabet("1234567890abcdef", 5);
 
 export const getEditorProps = () => {
@@ -262,3 +263,14 @@ export const compareFileName = key => {
     return currentFilePath.includes(key);
   }
 };
+
+export const isValueType = (value: unknown, valueType: ValueTypeOrder) => {
+  if (valueType === ValueTypeOrder.boolean) return _.isBoolean(value)
+  if (valueType === ValueTypeOrder.null) return _.isNull(value)
+  if (valueType === ValueTypeOrder.number) return _.isNumber(value)
+  if (valueType === ValueTypeOrder.string) return _.isString(value)
+  if (valueType === ValueTypeOrder.array) return _.isArray(value) && !value.every(_.isPlainObject)
+  if (valueType === ValueTypeOrder.collection) return _.isArray(value) && value.every(_.isPlainObject)
+  if (valueType === ValueTypeOrder.plainObject) return _.isPlainObject(value)
+  return true;
+}

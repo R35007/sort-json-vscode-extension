@@ -41,7 +41,8 @@ export class Settings {
   }
 
   static get sortValueTypeOrder() {
-    return Settings.getSettings('sortValueTypeOrder') as ValueTypeOrder[];
+    const valueTypeOrder = Settings.getSettings('sortValueTypeOrder') as ValueTypeOrder[];
+    return [...valueTypeOrder, ...Object.values(ValueTypeOrder).filter(item => !valueTypeOrder.includes(item))] as ValueTypeOrder[];
   }
 
   static get isCaseSensitive() {
