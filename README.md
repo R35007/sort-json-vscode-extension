@@ -26,6 +26,7 @@ Simple JSON Object and Array sort.
 - Override object sort key order
 - Sort by case sensitive and insensitive
 - Set Nested Sort level
+- Sort Partially selected json text 
 - Also supports Quick Fix and Fix All code action
 
 ## Configuration Settings
