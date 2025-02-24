@@ -5,6 +5,7 @@ import { customAlphabet } from "nanoid";
 import * as vscode from "vscode";
 import { Settings } from "./Settings";
 import { ValueTypeOrder } from './enum';
+import * as JSONBig from "json-bigint";
 const nanoid = customAlphabet("1234567890abcdef", 5);
 
 export const getEditorProps = () => {
@@ -25,9 +26,13 @@ export const getEditorProps = () => {
 
 const parseJSON = (dataText: string) => {
   try {
+    if (Settings.preserveBingInt) {
+      const data = JSONBig({ storeAsString: Settings.convertBingIntToString }).parse(dataText);
+      return { data, stringify: JSONBig.stringify };
+    }
     const data = JSON.parse(dataText);
     return { data, stringify: JSON.stringify };
-  } catch (err) {
+  } catch {
     try {
       // If parsing json with comment-json doesn't work the try with json5 parsing
       const data = jsonc.parse(dataText);
