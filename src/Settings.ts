@@ -113,8 +113,16 @@ export class Settings {
   static get forceSort() {
     return Settings.getSettings('forceSort') as boolean;
   }
-
+  
   static get jsonFormatIndent() {
     return Settings.getSettings('jsonFormatIndent') as number | null;
+  }
+
+  static get preserveBingInt() {
+    return Settings.getSettings('preserveBingInt') as boolean;
+  }
+
+  static get convertBingIntToString() {
+    return Settings.getSettings('convertBingIntToString') as boolean;
   }
 }

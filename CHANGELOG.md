@@ -1,5 +1,17 @@
 # Change Log
 
+## v20.1.0
+ - Added 
+  - `sort-json.settings.preserveBingInt`- helps to preserve BigInt in JSON. 
+  - This won't work on JSON with comments.
+  -  Be caution, this may modify the number based on the bigint.
+   ![Image](https://github.com/user-attachments/assets/c58a2169-7ec1-479d-9db5-8e4d2c82c6ae)
+
+- Added - `sort-json.settings.convertBingIntToString`
+  - This helps to convert all BigInt to a string.
+  - This works only if `sort-json.settings.preserveBingInt` set to `true`.
+   ![Image](https://github.com/user-attachments/assets/da5092d9-ec85-4983-aed4-77f82bb8c78f)
+
 ## v20.0.0
 
 - Enhanced - Now supports sorting partially selected json text. Now its not mandated to select json text with brackets.

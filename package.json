@@ -2,7 +2,7 @@
   "name": "sort-json",
   "displayName": "Sort JSON",
   "description": "Simple JSON Object and Array sort",
-  "version": "20.0.0",
+  "version": "20.1.0",
   "publisher": "Thinker",
   "license": "MIT",
   "icon": "images/sort-json-logo.png",
@@ -375,6 +375,19 @@
           ],
           "default": null,
           "description": "Set JSON sorting formate indent spaces. Set to empty to use the editor tab size"
+        },
+        "sort-json.settings.preserveBingInt": {
+          "order": 18,
+          "type": "boolean",
+          "default": false,
+          "description": "If true, preserves the bigint. This won't work on JSON with comments. Be caution, this may modify the number based on the bigint."
+        },
+        "sort-json.settings.convertBingIntToString": {
+          "order": 19,
+          "type": "boolean",
+          "default": false,
+          "scope": "window",
+          "description": "If true, it converts all BigInts into string. This works only if #sort-json.settings.preserveBingInt# is true"
         }
       }
     },
@@ -547,6 +560,7 @@
   },
   "dependencies": {
     "comment-json": "^4.2.5",
+    "json-bigint": "^1.0.0",
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
     "nanoid": "^5.1.2"
